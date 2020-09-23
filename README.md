@@ -1,2 +1,2 @@
-# http://Anderson-ALGO.github.io
+# http://Anderson-ALGO.github.io/dashboard.html
 FX DASHBOARD
