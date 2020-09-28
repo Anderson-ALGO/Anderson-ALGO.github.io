@@ -1,6 +1,7 @@
-Direct Link Access
+DASHBOARD
 # http://Anderson-ALGO.github.io/dashboard.html
-# http://Anderson-ALGO.github.io/multiple-screens.html
-FX DASHBOARD
 
-Open SCREENSHOTS folder in order to preview the content.
+MULTIPLE SCREENS 9
+# http://Anderson-ALGO.github.io/multiple-screens.html
+
+Contact Me: @Anderson_Gu (Telegram)
