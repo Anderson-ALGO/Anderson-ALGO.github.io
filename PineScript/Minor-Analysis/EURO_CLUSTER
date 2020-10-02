@@ -1,0 +1,444 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+
+//@version=4
+study(title='|AG| 4th Dimension Currency Strength')
+
+f_grad(_value)=>
+    _value >= 11 ? #0002A2 :
+         _value == 10 ? #0045A9 :
+         _value == 09 ? #008EB0 :
+         _value == 08 ? #00B690 :
+         _value == 07 ? #00BD4A :
+         _value == 06 ? #01C400 :
+         _value == 05 ? #52CA00 :
+         _value == 04 ? #A8D100 :
+         _value == 03 ? #D7AC00 :
+         _value == 02 ? #DE5800 :
+         _value == 01 ? #FF0000 : color.white
+
+// Switches
+
+string VAR_Selection = input(defval="EUR", title="SELECT PAIR SET", options= ["CURRENCY STRENGTH","EUR","USD","JPY","CHF","GBP","AUD","CAD","NZD","XAU"])
+
+STRG_PAIRS      = iff(VAR_Selection == "CURRENCY STRENGTH", 1, 0)
+EUR_PAIRS       = iff(VAR_Selection == "EUR", 1, 0)
+USD_PAIRS       = iff(VAR_Selection == "USD", 1, 0)
+JPY_PAIRS       = iff(VAR_Selection == "JPY", 1, 0)
+CHF_PAIRS       = iff(VAR_Selection == "CHF", 1, 0)
+GBP_PAIRS       = iff(VAR_Selection == "GBP", 1, 0)
+AUD_PAIRS       = iff(VAR_Selection == "AUD", 1, 0)
+CAD_PAIRS       = iff(VAR_Selection == "CAD", 1, 0)
+NZD_PAIRS       = iff(VAR_Selection == "NZD", 1, 0)
+XXX_PAIRS       = iff(VAR_Selection == "XAU", 1, 0)
+
+bool theme      = input(true, "Theme Day?")
+
+string XXX      = "XAU"
+
+//THEME
+
+color_theme = iff(theme == true, color.black, color.aqua)
+
+
+float src = input(close, "Source", type=input.source)
+string BROKER = input("OANDA", "Brokers", options=["OANDA", "FX", "FOREXCOM"])
+float EURUSD_CUR = security(BROKER + ":EURUSD", timeframe.period, close)
+float USDJPY_CUR = security(BROKER + ":USDJPY", timeframe.period, close)
+float USDCHF_CUR = security(BROKER + ":USDCHF", timeframe.period, close)
+float GBPUSD_CUR = security(BROKER + ":GBPUSD", timeframe.period, close)
+float AUDUSD_CUR = security(BROKER + ":AUDUSD", timeframe.period, close)
+float USDCAD_CUR = security(BROKER + ":USDCAD", timeframe.period, close)
+float NZDUSD_CUR = security(BROKER + ":NZDUSD", timeframe.period, close)
+
+//For GOLD I Suggest Only OANDA
+
+float XXXUSD_CUR = security(BROKER + ":" + XXX + "USD", timeframe.period, close)
+float XXXEUR_CUR = security(BROKER + ":" + XXX + "EUR", timeframe.period, close)
+float XXXJPY_CUR = security(BROKER + ":" + XXX + "JPY", timeframe.period, close)
+float XXXCHF_CUR = security(BROKER + ":" + XXX + "CHF", timeframe.period, close)
+float XXXGBP_CUR = security(BROKER + ":" + XXX + "GBP", timeframe.period, close)
+float XXXAUD_CUR = security(BROKER + ":" + XXX + "AUD", timeframe.period, close)
+float XXXCAD_CUR = security(BROKER + ":" + XXX + "CAD", timeframe.period, close)
+
+float EURUSD_D = security(BROKER + ":EURUSD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float USDJPY_D = security(BROKER + ":USDJPY", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float USDCHF_D = security(BROKER + ":USDCHF", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float GBPUSD_D = security(BROKER + ":GBPUSD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float AUDUSD_D = security(BROKER + ":AUDUSD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float USDCAD_D = security(BROKER + ":USDCAD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float NZDUSD_D = security(BROKER + ":NZDUSD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+
+float XXXUSD_D = security(BROKER + ":" + XXX + "USD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXEUR_D = security(BROKER + ":" + XXX + "EUR", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXJPY_D = security(BROKER + ":" + XXX + "JPY", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXCHF_D = security(BROKER + ":" + XXX + "CHF", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXGBP_D = security(BROKER + ":" + XXX + "GBP", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXAUD_D = security(BROKER + ":" + XXX + "AUD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+float XXXCAD_D = security(BROKER + ":" + XXX + "CAD", "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+
+
+// Functions
+get_val (v1_, v2_) =>
+    float res = 0
+    
+    if (v2_ == 0)
+        res := 0
+    else
+        res := log(v1_ / v2_) * 10000
+
+    res
+
+get_val_m (v1_, v2_, v3_, v4_) =>
+    float res = 0
+    v1 = v1_ * v3_
+    v2 = v2_ * v4_
+
+    if (v2 == 0) 
+        res := 0
+    else
+        res := log(v1 / v2) * 10000
+
+    res
+
+get_val_d (v1_, v2_, v3_, v4_) =>
+    float res = 0
+
+    if (v3_ == 0 or v4_ == 0)
+        res := 0
+    else
+        v1 = v1_ / v3_
+        v2 = v2_ / v4_
+        res := log(v1 / v2) * 10000
+
+    res
+
+// Calculating
+float EURUSD = get_val(EURUSD_D, EURUSD_CUR)
+float USDJPY = get_val(USDJPY_D, USDJPY_CUR)
+float USDCHF = get_val(USDCHF_D, USDCHF_CUR)
+float GBPUSD = get_val(GBPUSD_D, GBPUSD_CUR)
+float AUDUSD = get_val(AUDUSD_D, AUDUSD_CUR)
+float USDCAD = get_val(USDCAD_D, USDCAD_CUR)
+float NZDUSD = get_val(NZDUSD_D, NZDUSD_CUR)
+
+float XXXUSD = get_val(XXXUSD_D, XXXUSD_CUR)
+float XXXEUR = get_val(XXXEUR_D, XXXEUR_CUR)
+float XXXJPY = get_val(XXXJPY_D, XXXJPY_CUR)
+float XXXCHF = get_val(XXXCHF_D, XXXCHF_CUR)
+float XXXGBP = get_val(XXXGBP_D, XXXGBP_CUR)
+float XXXAUD = get_val(XXXAUD_D, XXXAUD_CUR)
+float XXXCAD = get_val(XXXCAD_D, XXXCAD_CUR)
+
+float EURJPY = get_val_m(EURUSD_D, EURUSD_CUR, USDJPY_D, USDJPY_CUR)
+float EURCHF = get_val_m(EURUSD_D, EURUSD_CUR, USDCHF_D, USDCHF_CUR)
+float EURGBP = get_val_d(EURUSD_D, EURUSD_CUR, GBPUSD_D, GBPUSD_CUR)
+float CHFJPY = get_val_d(USDJPY_D, USDJPY_CUR, USDCHF_D, USDCHF_CUR)
+float GBPCHF = get_val_m(GBPUSD_D, GBPUSD_CUR, USDCHF_D, USDCHF_CUR)
+float GBPJPY = get_val_m(GBPUSD_D, GBPUSD_CUR, USDJPY_D, USDJPY_CUR)
+float AUDCHF = get_val_m(AUDUSD_D, AUDUSD_CUR, USDCHF_D, USDCHF_CUR)
+float AUDJPY = get_val_m(AUDUSD_D, AUDUSD_CUR, USDJPY_D, USDJPY_CUR)
+float AUDCAD = get_val_m(AUDUSD_D, AUDUSD_CUR, USDCAD_D, USDCAD_CUR)
+float EURCAD = get_val_m(EURUSD_D, EURUSD_CUR, USDCAD_D, USDCAD_CUR)
+float GBPCAD = get_val_m(GBPUSD_D, GBPUSD_CUR, USDCAD_D, USDCAD_CUR)
+float GBPAUD = get_val_d(GBPUSD_D, GBPUSD_CUR, AUDUSD_D, AUDUSD_CUR)
+float EURAUD = get_val_d(EURUSD_D, EURUSD_CUR, AUDUSD_D, AUDUSD_CUR)
+float CADCHF = get_val_d(USDCHF_D, USDCHF_CUR, USDCAD_D, USDCAD_CUR)
+float CADJPY = get_val_d(USDJPY_D, USDJPY_CUR, USDCAD_D, USDCAD_CUR)
+float AUDNZD = get_val_d(AUDUSD_D, AUDUSD_CUR, NZDUSD_D, NZDUSD_CUR)
+float EURNZD = get_val_d(EURUSD_D, EURUSD_CUR, NZDUSD_D, NZDUSD_CUR)
+float GBPNZD = get_val_d(GBPUSD_D, GBPUSD_CUR, NZDUSD_D, NZDUSD_CUR)
+float NZDCAD = get_val_m(NZDUSD_D, NZDUSD_CUR, USDCAD_D, USDCAD_CUR)
+float NZDCHF = get_val_m(NZDUSD_D, NZDUSD_CUR, USDCHF_D, USDCHF_CUR)
+float NZDJPY = get_val_m(NZDUSD_D, NZDUSD_CUR, USDJPY_D, USDJPY_CUR)
+
+int PAIRS = 7
+float EUR = (( EURUSD + EURJPY + EURCHF + EURGBP + EURAUD + EURCAD + EURNZD) / PAIRS)  * -1
+float USD = ((-EURUSD + USDJPY + USDCHF - GBPUSD - AUDUSD + USDCAD - NZDUSD) / PAIRS)  * -1 
+float JPY = ((-EURJPY - USDJPY - CHFJPY - GBPJPY - AUDJPY - CADJPY - NZDJPY) / PAIRS)  * -1
+float CHF = ((-EURCHF - USDCHF + CHFJPY - GBPCHF - AUDCHF - CADCHF - NZDCHF) / PAIRS)  * -1
+float GBP = ((-EURGBP + GBPUSD + GBPCHF + GBPJPY + GBPAUD + GBPCAD + GBPNZD) / PAIRS)  * -1
+float AUD = ((-EURAUD + AUDUSD + AUDJPY + AUDCHF - GBPAUD + AUDCAD + AUDNZD) / PAIRS)  * -1
+float CAD = ((-EURCAD - USDCAD + CADJPY + CADCHF - GBPCAD - AUDCAD - NZDCAD) / PAIRS)  * -1
+float NZD = ((-EURNZD + NZDUSD + NZDJPY + NZDCHF - GBPNZD + NZDCAD - AUDNZD) / PAIRS)  * -1
+float XX1 = (( XXXUSD + XXXEUR + XXXJPY + XXXCHF + XXXGBP + XXXAUD + XXXCAD) / 7)  * -1
+
+float CUR_1=0.0
+float CUR_2=0.0
+float CUR_3=0.0
+float CUR_4=0.0
+float CUR_5=0.0
+float CUR_6=0.0
+float CUR_7=0.0
+float CUR_8=0.0
+float CUR_9=0.0
+CUR_N_1 = "EURUSD"
+CUR_N_2 = "EURJPY"
+CUR_N_3 = "EURCHF"
+CUR_N_4 = "EURGBP"
+CUR_N_5 = "EURAUD"
+CUR_N_6 = "EURCAD"
+CUR_N_7 = "EURNZD"
+CUR_N_8 = "EUR"
+CUR_N_9 = "USD"
+
+if STRG_PAIRS == 1
+    
+    CUR_1:=true?EUR:na
+    CUR_2:=true?USD:na
+    CUR_3:=true?JPY:na
+    CUR_4:=true?CHF:na
+    CUR_5:=true?GBP:na
+    CUR_6:=true?AUD:na
+    CUR_7:=true?CAD:na
+    CUR_8:=true?NZD:na
+    CUR_9:=true?XX1:na
+
+    
+if EUR_PAIRS == 1
+
+    CUR_1:=true?EURUSD* -1:na
+    CUR_2:=true?EURJPY* -1:na
+    CUR_3:=true?EURCHF* -1:na
+    CUR_4:=true?EURGBP* -1:na
+    CUR_5:=true?EURAUD* -1:na
+    CUR_6:=true?EURCAD* -1:na
+    CUR_7:=true?EURNZD* -1:na
+    CUR_8:=true?EUR:na
+    CUR_9:=true?USD:na
+
+if USD_PAIRS == 1
+
+    CUR_1:=true?EURUSD* -1:na
+    CUR_2:=true?USDJPY* -1:na
+    CUR_3:=true?USDCHF* -1:na
+    CUR_4:=true?GBPUSD* -1:na
+    CUR_5:=true?AUDUSD* -1:na
+    CUR_6:=true?USDCAD* -1:na
+    CUR_7:=true?NZDUSD* -1:na
+    CUR_8:=true?USD:na
+    CUR_9:=true?EUR:na
+    
+if JPY_PAIRS == 1
+
+    CUR_1:=true?EURJPY* -1:na
+    CUR_2:=true?USDJPY* -1:na
+    CUR_3:=true?CHFJPY* -1:na
+    CUR_4:=true?GBPJPY* -1:na
+    CUR_5:=true?AUDJPY* -1:na
+    CUR_6:=true?USDJPY* -1:na
+    CUR_7:=true?NZDJPY* -1:na
+    CUR_8:=true?JPY:na
+    CUR_9:=true?USD:na
+    
+if CHF_PAIRS == 1
+
+    CUR_1:=true?EURCHF* -1:na
+    CUR_2:=true?USDCHF* -1:na
+    CUR_3:=true?CHFJPY* -1:na
+    CUR_4:=true?GBPCHF* -1:na
+    CUR_5:=true?AUDCHF* -1:na
+    CUR_6:=true?CADCHF* -1:na
+    CUR_7:=true?NZDCHF* -1:na
+    CUR_8:=true?CHF:na
+    CUR_9:=true?USD:na
+
+if GBP_PAIRS == 1
+
+    CUR_1:=true?EURGBP* -1:na
+    CUR_2:=true?GBPUSD* -1:na
+    CUR_3:=true?GBPCHF* -1:na
+    CUR_4:=true?GBPJPY* -1:na
+    CUR_5:=true?GBPAUD* -1:na
+    CUR_6:=true?GBPCAD* -1:na
+    CUR_7:=true?GBPNZD* -1:na
+    CUR_8:=true?GBP:na
+    CUR_9:=true?EUR:na
+    
+if AUD_PAIRS == 1
+
+    CUR_1:=true?EURAUD* -1:na
+    CUR_2:=true?AUDUSD* -1:na
+    CUR_3:=true?AUDJPY* -1:na
+    CUR_4:=true?AUDCHF* -1:na
+    CUR_5:=true?GBPAUD* -1:na
+    CUR_6:=true?AUDCAD* -1:na
+    CUR_7:=true?AUDNZD* -1:na
+    CUR_8:=true?AUD:na
+    CUR_9:=true?USD:na
+
+if CAD_PAIRS == 1
+
+    CUR_1:=true?EURCAD* -1:na
+    CUR_2:=true?USDCAD* -1:na
+    CUR_3:=true?CADJPY* -1:na
+    CUR_4:=true?CADCHF* -1:na
+    CUR_5:=true?GBPCAD* -1:na
+    CUR_6:=true?AUDCAD* -1:na
+    CUR_7:=true?NZDCAD* -1:na
+    CUR_8:=true?CAD:na
+    CUR_9:=true?USD:na
+
+if NZD_PAIRS == 1
+
+    CUR_1:=true?EURNZD* -1:na
+    CUR_2:=true?NZDUSD* -1:na
+    CUR_3:=true?NZDJPY* -1:na
+    CUR_4:=true?NZDCHF* -1:na
+    CUR_5:=true?GBPNZD* -1:na
+    CUR_6:=true?NZDCAD* -1:na
+    CUR_7:=true?AUDNZD* -1:na
+    CUR_8:=true?NZD:na
+    CUR_9:=true?USD:na
+
+if XXX_PAIRS == 1
+
+    CUR_1:=true?XXXUSD* -1:na
+    CUR_2:=true?XXXEUR* -1:na
+    CUR_3:=true?XXXJPY* -1:na
+    CUR_4:=true?XXXCHF* -1:na
+    CUR_5:=true?XXXGBP* -1:na
+    CUR_6:=true?XXXAUD* -1:na
+    CUR_7:=true?XXXCAD* -1:na
+    CUR_8:=true?XX1:na
+    CUR_9:=true?USD:na
+
+float feature01 = CUR_1-CUR_1[1]
+float feature02 = round(rsi(CUR_1,14)[1]*10)
+
+float feature03 = CUR_2-CUR_2[1]
+float feature04 = round(rsi(CUR_2,14)[1]*10)
+
+float feature05 = CUR_3-CUR_3[1]
+float feature06 = round(rsi(CUR_3,14)[1]*10)
+
+float feature07 = CUR_4-CUR_4[1]
+float feature08 = round(rsi(CUR_4,14)[1]*10)
+
+float feature09 = CUR_5-CUR_5[1]
+float feature10 = round(rsi(CUR_5,14)[1]*10)
+
+float feature11 = CUR_6-CUR_6[1]
+float feature12 = round(rsi(CUR_6,14)[1]*10)
+
+float feature13 = CUR_7-CUR_7[1]
+float feature14 = round(rsi(CUR_7,14)[1]*10)
+
+float feature15 = CUR_8-CUR_8[1]
+float feature16 = round(rsi(CUR_8,14)[1]*10)
+
+float feature17 = CUR_9-CUR_9[1]
+float feature18 = round(rsi(CUR_9,14)[1]*10)
+
+int data_range = 10
+
+float[] X =   array.new_float(data_range, feature01)
+float[] Y =   array.new_float(data_range, feature02)
+float[] X_1 = array.new_float(data_range, feature03)
+float[] Y_1 = array.new_float(data_range, feature04)
+float[] X_2 = array.new_float(data_range, feature05)
+float[] Y_2 = array.new_float(data_range, feature06)
+float[] X_3 = array.new_float(data_range, feature07)
+float[] Y_3 = array.new_float(data_range, feature08)
+float[] X_4 = array.new_float(data_range, feature09)
+float[] Y_4 = array.new_float(data_range, feature10)
+float[] X_5 = array.new_float(data_range, feature11)
+float[] Y_5 = array.new_float(data_range, feature12)
+float[] X_6 = array.new_float(data_range, feature13)
+float[] Y_6 = array.new_float(data_range, feature14)
+float[] X_7 = array.new_float(data_range, feature15)
+float[] Y_7 = array.new_float(data_range, feature16)
+float[] X_8 = array.new_float(data_range, feature17)
+float[] Y_8 = array.new_float(data_range, feature18)
+
+for _i = 0 to data_range -1
+    array.set(id=X, index=_i, value=feature01[_i])
+    array.set(id=Y, index=_i, value=feature02[_i])
+    array.set(id=X_1, index=_i, value=feature03[_i])
+    array.set(id=Y_1, index=_i, value=feature04[_i])
+    array.set(id=X_2, index=_i, value=feature05[_i])
+    array.set(id=Y_2, index=_i, value=feature06[_i])
+    array.set(id=X_3, index=_i, value=feature07[_i])
+    array.set(id=Y_3, index=_i, value=feature08[_i])
+    array.set(id=X_4, index=_i, value=feature09[_i])
+    array.set(id=Y_4, index=_i, value=feature10[_i])
+    array.set(id=X_5, index=_i, value=feature11[_i])
+    array.set(id=Y_5, index=_i, value=feature12[_i])
+    array.set(id=X_6, index=_i, value=feature13[_i])
+    array.set(id=Y_6, index=_i, value=feature14[_i])
+    array.set(id=X_7, index=_i, value=feature15[_i])
+    array.set(id=Y_7, index=_i, value=feature16[_i])
+    array.set(id=X_8, index=_i, value=feature17[_i])
+    array.set(id=Y_8, index=_i, value=feature18[_i])
+
+plotshape(series=array.get(X, 0)  , title='', style=shape.circle, location=location.absolute, color=f_grad(3),    textcolor= f_grad(3),          transp=0, offset=int(-1000+array.get(Y, 0)),   size=size.normal, show_last=1, text=CUR_N_1)
+plotshape(series=array.get(X_1, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(2),    textcolor= f_grad(2),          transp=0, offset=int(-1000+array.get(Y_1, 0)), size=size.normal, show_last=1, text=CUR_N_2)
+plotshape(series=array.get(X_2, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(1),    textcolor= f_grad(1),          transp=0, offset=int(-1000+array.get(Y_2, 0)), size=size.normal, show_last=1, text=CUR_N_3)
+plotshape(series=array.get(X_3, 0), title='', style=shape.circle, location=location.absolute, color=color.purple, textcolor= color.purple,       transp=0, offset=int(-1000+array.get(Y_3, 0)), size=size.normal, show_last=1, text=CUR_N_4)
+plotshape(series=array.get(X_4, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(7),    textcolor= f_grad(7),          transp=0, offset=int(-1000+array.get(Y_4, 0)), size=size.normal, show_last=1, text=CUR_N_5)
+plotshape(series=array.get(X_5, 0), title='', style=shape.circle, location=location.absolute, color=color.blue,   textcolor= color.blue,         transp=0, offset=int(-1000+array.get(Y_5, 0)), size=size.normal, show_last=1, text=CUR_N_6)
+plotshape(series=array.get(X_6, 0), title='', style=shape.circle, location=location.absolute, color=color.green,  textcolor= color.green,        transp=0, offset=int(-1000+array.get(Y_6, 0)), size=size.normal, show_last=1, text=CUR_N_7)
+plotshape(series=array.get(X_7, 0), title='', style=shape.circle, location=location.absolute, color=color.yellow, textcolor= color.yellow,       transp=0, offset=int(-1000+array.get(Y_7, 0)), size=size.normal, show_last=1, text=CUR_N_8)
+plotshape(series=array.get(X_8, 0), title='', style=shape.circle, location=location.absolute, color=color.yellow, textcolor= color.yellow,       transp=0, offset=int(-1000+array.get(Y_8, 0)), size=size.normal, show_last=1, text=CUR_N_9)
+
+//plot(wma(array.get(X_3, 0), 14), offset=int(-1000+array.get(Y_3, 0)), color=color.purple)
+
+var line box_top    = line.new(x1=bar_index, y1=0.0,x2=bar_index, y2=0.0, xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
+var line box_bot    = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
+var line box_left   = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
+var line box_right  = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
+
+var line box_ob     = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
+var line box_os     = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
+
+var float top = 0.0
+var float bot = 0.0
+int left = bar_index-1000
+int right = bar_index
+int ob = bar_index-250
+int os = bar_index-750
+
+top := cum(array.max(id=X)) / (bar_index + 1)//max(nz(top), array.max(id=X))
+bot := cum(array.min(id=X)) / (bar_index + 1)//min(nz(bot), array.min(id=X)) 
+
+// plot(series=top)
+// plot(series=bot)
+hline(0)
+
+line.set_xy1(id=box_top, x=left, y=top)
+line.set_xy2(id=box_top, x=right, y=top)
+line.set_xy1(id=box_bot, x=left, y=bot)
+line.set_xy2(id=box_bot, x=right, y=bot)
+line.set_xy1(id=box_left, x=left, y=top)
+line.set_xy2(id=box_left, x=left, y=bot)
+line.set_xy1(id=box_right, x=right, y=top)
+line.set_xy2(id=box_right, x=right, y=bot)
+line.set_xy1(id=box_ob, x=ob, y=top)
+line.set_xy2(id=box_ob, x=ob, y=bot)
+line.set_xy1(id=box_os, x=os, y=top)
+line.set_xy2(id=box_os, x=os, y=bot)
+
+var label _latop = label.new(bar_index, 0.0,
+         'WEAK                                                                                          0% <-- Strength Percentage --> 100%                                                                                          STRONG', 
+          style = label.style_label_up,
+          color = #00000000, 
+          textcolor = color_theme)
+var label _larig = label.new(bar_index, 0.0,
+         'Huge Movement\n\n\n\n\n\n\n+\nCurrency Volatility\n-\n\n\n\n\n\n\nTiny Movement', 
+          style=label.style_label_left , color= #00000000, textcolor= color_theme)
+label.set_xy(id=_latop, x=bar_index-500, y=bot)
+label.set_xy(id=_larig, x=bar_index, y=avg(top, bot))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
