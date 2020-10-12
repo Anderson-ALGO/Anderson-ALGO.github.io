@@ -18,4 +18,5 @@ def Media(x):
 anderson = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
 z, y, r, des, des_ = Media(anderson)
-print("Suma De Todos Los Datos : {} \nNumero De Datos : {}\nPromedio : {}\nVarianza : {} \nDesviación : {}".format(z, y, r, des, des_))
+print("Suma De Todos Los Datos : {} \nNumero De Datos : {}\nPromedio : {}\nVarianza : {} \nDesviación : {}"
+      .format(z, y, r, des, des_))
