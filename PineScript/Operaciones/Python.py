@@ -35,22 +35,4 @@ des_ = (des**(0.5))
 
 print("Varianza : {} \nDesviación : {}".format(des,des_))
 
-
-def Media(x):
-    y = len(x)
-    z = 0
-    for indice in x:
-        z = z + indice 
-    r = z/y    
-    r_ = 0
-    for desv in x:
-        r_ = ((desv - r)**2) + r_
-    des  = (r_ / (y - 1))
-    des_ = (des**(0.5))
-    
-    return z, y, r, des, des_
-    
-anderson = [2,5,9,8,7,6,3,5]
-
-z, y, r, des, des_ = Media(anderson)
-print("Suma De Todos Los Datos : {} \nNumero De Datos : {}\nPromedio : {}\nVarianza : {} \nDesviación : {}".format(z, y, r, des, des_))
+#END
