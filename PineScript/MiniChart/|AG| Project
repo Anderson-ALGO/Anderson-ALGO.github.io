@@ -1,0 +1,93 @@
+// This source code is subject to the terms of the Mozilla Public License 2.i at https://mozilla.org/MPL/2.i/
+// © Anderson_Guilcapi
+
+//@version=4
+study("|AG| Project")
+
+b_wi        = input(title = "Bar Width", defval=6)
+_prc1       = 10 //lenght not recomendable to change
+_ma_v       = input(title = "MA VALUE", defval=20)
+xp_1 = time + round(change(time) * -(30))
+xp_2 = time + round(change(time) * -(20))
+xp_3 = time + round(change(time) * -(10))
+xp_4 = time + round(change(time) * -(0 ))
+string tckr_1 = input("EURUSD", title="Ticker 1", type=input.symbol)
+string tckr_2 = input("XAUUSD", title="Ticker 2", type=input.symbol)
+string tckr_3 = input("XAUEUR", title="Ticker 3", type=input.symbol)
+string tckr_4 = input("EURCAD", title="Ticker 4", type=input.symbol)
+
+[open_1, high_1, low_1, close_1] = security(tckr_1, timeframe.period, [open, high, low, close]) 
+[open_2, high_2, low_2, close_2] = security(tckr_2, timeframe.period, [open, high, low, close]) 
+[open_3, high_3, low_3, close_3] = security(tckr_3, timeframe.period, [open, high, low, close]) 
+[open_4, high_4, low_4, close_4] = security(tckr_4, timeframe.period, [open, high, low, close]) 
+
+get_percetage(v1_, v2_, v3_, v4_)=>
+    float _o = v1_
+    float _h = v2_
+    float _l = v3_
+    float _c = v4_
+    [_o, _h, _l, _c]
+
+[po1_, ph1_, pl1_, pc1_]  = get_percetage(open_1, high_1, low_1, close_1)
+[po2_, ph2_, pl2_, pc2_]  = get_percetage(open_2, high_2, low_2, close_2)
+[po3_, ph3_, pl3_, pc3_]  = get_percetage(open_3, high_3, low_3, close_3)
+[po4_, ph4_, pl4_, pc4_]  = get_percetage(open_4, high_4, low_4, close_4)
+
+rescale(_src, _oldMin, _oldMax, _newMin, _newMax) =>
+    _newMin + (_newMax - _newMin) * (_src - _oldMin) / max(_oldMax - _oldMin, 10e-10)
+
+index(s) =>
+    min(s[6], min(s[5], min(s[4], s[2], min(s[1], s))))
+
+scale(_o_, _h_, _l_, _c_)=>
+    float _o =  rescale ( stoch(_o_, _h_ , _l_ , 14), 0 , 1, 10, 20)
+    float _h =  rescale ( stoch(_h_, _h_ , _l_ , 14), 0 , 1, 10, 20)
+    float _l =  rescale ( stoch(_l_, _h_ , _l_ , 14), 0 , 1, 10, 20)
+    float _c =  rescale ( stoch(_c_, _h_ , _l_ , 14), 0 , 1, 10, 20)
+    [_o, _h, _l, _c]
+
+[po1, ph1, pl1, pc1] = scale(po1_, ph1_, pl1_, pc1_)
+[po2, ph2, pl2, pc2] = scale(po2_, ph2_, pl2_, pc2_)
+[po3, ph3, pl3, pc3] = scale(po3_, ph3_, pl3_, pc3_)
+[po4, ph4, pl4, pc4] = scale(po4_, ph4_, pl4_, pc4_)
+
+labelpos = index(pl1)
+
+plot(ema(pc1, _ma_v), offset=-30, show_last=6)
+plot(ema(pc2, _ma_v), offset=-20, show_last=6)
+plot(ema(pc3, _ma_v), offset=-10, show_last=6)
+plot(ema(pc4, _ma_v), offset=-0 , show_last=6)
+
+f_draw_line(_x, _o, _h, _l, _c, _ticker, _ll, _label_pos, _xx)=>
+    _color = _c > _o ? color.black : color.purple
+    var line _body = na
+    var line _wick = na
+    line.delete(_body[1])
+    line.delete(_wick[1])
+    _body := line.new( 
+             x1=_x, y1=_o, 
+             x2=_x, y2=_c, 
+             xloc=xloc.bar_time, extend=extend.none,
+             color=_color, style=line.style_solid, width=b_wi
+             )
+    _wick := line.new( 
+             x1=_x, y1=_h, 
+             x2=_x, y2=_l, 
+             xloc=xloc.bar_time, extend=extend.none,
+             color=_color, style=line.style_solid, width=1
+             )
+    if true
+        var label _la = na
+        label.delete(_la)
+        _la := label.new(
+             x=_x[2], y=labelpos,
+             text= _ticker + "\n" + tostring(_xx) + " [ " + tostring(((_ll-_ll[1])/_ll[1]*100) ,  "#.###") + " % ]",
+             xloc=xloc.bar_time, yloc=yloc.price,
+             color=color.red, style=label.style_labelup, textcolor=color.white, size=size.normal
+             )
+
+for _i = 5 to 0
+    f_draw_line(xp_1[_i], po1[_i], ph1[_i], pl1[_i], pc1[_i], tckr_1, close_1, labelpos, close_1)
+    f_draw_line(xp_2[_i], po2[_i], ph2[_i], pl2[_i], pc2[_i], tckr_2, close_2, labelpos, close_2)
+    f_draw_line(xp_3[_i], po3[_i], ph3[_i], pl3[_i], pc3[_i], tckr_3, close_3, labelpos, close_3)
+    f_draw_line(xp_4[_i], po4[_i], ph4[_i], pl4[_i], pc4[_i], tckr_4, close_4, labelpos, close_4)
