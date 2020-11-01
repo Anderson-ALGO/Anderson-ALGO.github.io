@@ -1,12 +1,3 @@
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147975914-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-147975914-1');
-</script>
 <img src="https://anderson-algo.github.io/Images/ANDERSON%20-%20FX%20DASHBOARD.png">
 
 # Start Ur Journey..
