@@ -1,4 +1,4 @@
-<img src="https://anderson-algo.github.io/Images/ANDERSON%20-%20FX%20DASHBOARD.png">
+![logo](https://anderson-algo.github.io/Images/ANDERSON%20-%20FX%20DASHBOARD.png "PineCoders")
 
 # Start Ur Journey..
 
