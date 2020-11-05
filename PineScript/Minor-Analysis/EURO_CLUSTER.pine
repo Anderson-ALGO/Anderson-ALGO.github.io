@@ -18,7 +18,7 @@ f_grad(_value)=>
 
 // Switches
 
-string VAR_Selection = input(defval="USD", title="SELECT PAIR SET", options= ["CURRENCY STRENGTH","EUR","USD","JPY","CHF","GBP","AUD","CAD","NZD","XAU"])
+string VAR_Selection = input(defval="EUR", title="SELECT PAIR SET", options= ["CURRENCY STRENGTH","EUR","USD","JPY","CHF","GBP","AUD","CAD","NZD","XAU"])
 
 STRG_PAIRS      = iff(VAR_Selection == "CURRENCY STRENGTH", 1, 0)
 EUR_PAIRS       = iff(VAR_Selection == "EUR", 1, 0)
@@ -172,14 +172,14 @@ float CUR_7=0.0
 float CUR_8=0.0
 float CUR_9=0.0
 CUR_N_1 = "EURUSD"
-CUR_N_2 = "USDJPY"
-CUR_N_3 = "USDCHF"
-CUR_N_4 = "GBPUSD"
-CUR_N_5 = "AUDUSD"
-CUR_N_6 = "USDCAD"
-CUR_N_7 = "NZDUSD"
-CUR_N_8 = "USD"
-CUR_N_9 = "EUR"
+CUR_N_2 = "EURJPY"
+CUR_N_3 = "EURCHF"
+CUR_N_4 = "EURGBP"
+CUR_N_5 = "EURAUD"
+CUR_N_6 = "EURCAD"
+CUR_N_7 = "EURNZD"
+CUR_N_8 = "EUR"
+CUR_N_9 = "USD"
 
 if STRG_PAIRS == 1
     
@@ -382,13 +382,12 @@ plotshape(series=array.get(X_8, 0), title='', style=shape.circle, location=locat
 
 //plot(wma(array.get(X_3, 0), 14), offset=int(-1000+array.get(Y_3, 0)), color=color.purple)
 
-var line box_top    = line.new(x1=bar_index, y1=0.0,x2=bar_index, y2=0.0, xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
-var line box_bot    = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
-var line box_left   = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
-var line box_right  = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid, width=3)
-
-var line box_ob     = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
-var line box_os     = line.new(x1=bar_index, y1=0., x2=bar_index, y2=0., xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
+var line box_top   = line.new(x1=bar_index, y1=0.0, x2=bar_index, y2=0.0, xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid , width=3)
+var line box_bot   = line.new(x1=bar_index, y1=0. , x2=bar_index, y2=0. , xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid , width=3)
+var line box_left  = line.new(x1=bar_index, y1=0. , x2=bar_index, y2=0. , xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid , width=3)
+var line box_right = line.new(x1=bar_index, y1=0. , x2=bar_index, y2=0. , xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_solid , width=3)
+var line box_ob    = line.new(x1=bar_index, y1=0. , x2=bar_index, y2=0. , xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
+var line box_os    = line.new(x1=bar_index, y1=0. , x2=bar_index, y2=0. , xloc=xloc.bar_index, extend=extend.none, color=color_theme, style=line.style_dashed, width=2)
 
 var float top = 0.0
 var float bot = 0.0

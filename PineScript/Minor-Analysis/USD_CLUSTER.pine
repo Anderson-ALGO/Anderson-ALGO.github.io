@@ -18,7 +18,7 @@ f_grad(_value)=>
 
 // Switches
 
-string VAR_Selection = input(defval="EUR", title="SELECT PAIR SET", options= ["CURRENCY STRENGTH","EUR","USD","JPY","CHF","GBP","AUD","CAD","NZD","XAU"])
+string VAR_Selection = input(defval="USD", title="SELECT PAIR SET", options= ["CURRENCY STRENGTH","EUR","USD","JPY","CHF","GBP","AUD","CAD","NZD","XAU"])
 
 STRG_PAIRS      = iff(VAR_Selection == "CURRENCY STRENGTH", 1, 0)
 EUR_PAIRS       = iff(VAR_Selection == "EUR", 1, 0)
@@ -172,14 +172,14 @@ float CUR_7=0.0
 float CUR_8=0.0
 float CUR_9=0.0
 CUR_N_1 = "EURUSD"
-CUR_N_2 = "EURJPY"
-CUR_N_3 = "EURCHF"
-CUR_N_4 = "EURGBP"
-CUR_N_5 = "EURAUD"
-CUR_N_6 = "EURCAD"
-CUR_N_7 = "EURNZD"
-CUR_N_8 = "EUR"
-CUR_N_9 = "USD"
+CUR_N_2 = "USDJPY"
+CUR_N_3 = "USDCHF"
+CUR_N_4 = "GBPUSD"
+CUR_N_5 = "AUDUSD"
+CUR_N_6 = "USDCAD"
+CUR_N_7 = "NZDUSD"
+CUR_N_8 = "USD"
+CUR_N_9 = "EUR"
 
 if STRG_PAIRS == 1
     
@@ -370,15 +370,15 @@ for _i = 0 to data_range -1
     array.set(id=X_8, index=_i, value=feature17[_i])
     array.set(id=Y_8, index=_i, value=feature18[_i])
 
-plotshape(series=array.get(X, 0)  , title='', style=shape.circle, location=location.absolute, color=f_grad(3),    textcolor= f_grad(3),          transp=0, offset=int(-1000+array.get(Y, 0)),   size=size.normal, show_last=1, text=CUR_N_1)
-plotshape(series=array.get(X_1, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(2),    textcolor= f_grad(2),          transp=0, offset=int(-1000+array.get(Y_1, 0)), size=size.normal, show_last=1, text=CUR_N_2)
-plotshape(series=array.get(X_2, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(1),    textcolor= f_grad(1),          transp=0, offset=int(-1000+array.get(Y_2, 0)), size=size.normal, show_last=1, text=CUR_N_3)
-plotshape(series=array.get(X_3, 0), title='', style=shape.circle, location=location.absolute, color=color.purple, textcolor= color.purple,       transp=0, offset=int(-1000+array.get(Y_3, 0)), size=size.normal, show_last=1, text=CUR_N_4)
-plotshape(series=array.get(X_4, 0), title='', style=shape.circle, location=location.absolute, color=f_grad(7),    textcolor= f_grad(7),          transp=0, offset=int(-1000+array.get(Y_4, 0)), size=size.normal, show_last=1, text=CUR_N_5)
-plotshape(series=array.get(X_5, 0), title='', style=shape.circle, location=location.absolute, color=color.blue,   textcolor= color.blue,         transp=0, offset=int(-1000+array.get(Y_5, 0)), size=size.normal, show_last=1, text=CUR_N_6)
-plotshape(series=array.get(X_6, 0), title='', style=shape.circle, location=location.absolute, color=color.green,  textcolor= color.green,        transp=0, offset=int(-1000+array.get(Y_6, 0)), size=size.normal, show_last=1, text=CUR_N_7)
-plotshape(series=array.get(X_7, 0), title='', style=shape.circle, location=location.absolute, color=color.yellow, textcolor= color.yellow,       transp=0, offset=int(-1000+array.get(Y_7, 0)), size=size.normal, show_last=1, text=CUR_N_8)
-plotshape(series=array.get(X_8, 0), title='', style=shape.circle, location=location.absolute, color=color.yellow, textcolor= color.yellow,       transp=0, offset=int(-1000+array.get(Y_8, 0)), size=size.normal, show_last=1, text=CUR_N_9)
+plotshape(series=array.get(X  , 0) , title='', style=shape.circle, location=location.absolute, color=      f_grad(3), textcolor=       f_grad(3), transp=0, offset=int(-1000+array.get(Y  , 0)), size=size.normal, show_last=1, text=CUR_N_1)
+plotshape(series=array.get(X_1, 0) , title='', style=shape.circle, location=location.absolute, color=      f_grad(2), textcolor=       f_grad(2), transp=0, offset=int(-1000+array.get(Y_1, 0)), size=size.normal, show_last=1, text=CUR_N_2)
+plotshape(series=array.get(X_2, 0) , title='', style=shape.circle, location=location.absolute, color=      f_grad(1), textcolor=       f_grad(1), transp=0, offset=int(-1000+array.get(Y_2, 0)), size=size.normal, show_last=1, text=CUR_N_3)
+plotshape(series=array.get(X_3, 0) , title='', style=shape.circle, location=location.absolute, color=color.purple   , textcolor= color.purple   , transp=0, offset=int(-1000+array.get(Y_3, 0)), size=size.normal, show_last=1, text=CUR_N_4)
+plotshape(series=array.get(X_4, 0) , title='', style=shape.circle, location=location.absolute, color=      f_grad(7), textcolor=       f_grad(7), transp=0, offset=int(-1000+array.get(Y_4, 0)), size=size.normal, show_last=1, text=CUR_N_5)
+plotshape(series=array.get(X_5, 0) , title='', style=shape.circle, location=location.absolute, color=color.blue     , textcolor= color.blue     , transp=0, offset=int(-1000+array.get(Y_5, 0)), size=size.normal, show_last=1, text=CUR_N_6)
+plotshape(series=array.get(X_6, 0) , title='', style=shape.circle, location=location.absolute, color=color.green    , textcolor= color.green    , transp=0, offset=int(-1000+array.get(Y_6, 0)), size=size.normal, show_last=1, text=CUR_N_7)
+plotshape(series=array.get(X_7, 0) , title='', style=shape.circle, location=location.absolute, color=color.yellow   , textcolor= color.yellow   , transp=0, offset=int(-1000+array.get(Y_7, 0)), size=size.normal, show_last=1, text=CUR_N_8)
+plotshape(series=array.get(X_8, 0) , title='', style=shape.circle, location=location.absolute, color=color.yellow   , textcolor= color.yellow   , transp=0, offset=int(-1000+array.get(Y_8, 0)), size=size.normal, show_last=1, text=CUR_N_9)
 
 //plot(wma(array.get(X_3, 0), 14), offset=int(-1000+array.get(Y_3, 0)), color=color.purple)
 

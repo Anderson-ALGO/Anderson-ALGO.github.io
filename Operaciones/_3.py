@@ -1,16 +1,16 @@
-import datetime as dt
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-import pandas as pd
-import pandas_datareader.data as web
-import numpy as np
+import datetime                 as dt
+import matplotlib       .pyplot as plt
+import matplotlib       .dates  as mdates
+import pandas                   as pd
+import pandas_datareader.data   as web
+import numpy                    as np
 
 start = dt.datetime(2020,10,19,0,0,0)
-end = dt.datetime(2020,10,20,0,0,0)
+end   = dt.datetime(2020,10,20,0,0,0)
 
-firm = "FB"
-df = web.DataReader(firm, "yahoo", start, end)
-df.to_excel("facebbok.xlsx")
+firm =                      "FB"
+df   = web.DataReader(firm, "yahoo"        , start, end)
+df  .to_excel(              "facebbok.xlsx")
 
 # Importar Archivos Masivamente
 
