@@ -1,0 +1,20 @@
+// Madrid : Squeeze Trend : 02/Aug/2015 : 11:41 : 2.0
+// This Study determines the range where the trend is more profitable.
+// http://madridjourneyonws.blogspot.com/
+//
+
+study("Madrid Trend Squeeze", shorttitle="MTrendSqueeze")
+len = input(34, title="Length", minval=14)
+src = close
+ref = 13
+sqzLen = 5
+
+ma = ema(src, len)
+closema = close - ma
+refma = ema(src, ref)-ma
+sqzma = ema(src, sqzLen)-ma
+
+hline(0)
+plotcandle(0, closema, 0, closema, color=closema>=0?aqua:fuchsia)
+plotcandle(0, sqzma, 0, sqzma, color=sqzma>=0?lime:red)
+plotcandle(0, refma, 0, refma, color=(refma>=0 and closema<refma) or (refma<0 and closema>refma ) ? yellow : refma>=0 ? green:maroon)

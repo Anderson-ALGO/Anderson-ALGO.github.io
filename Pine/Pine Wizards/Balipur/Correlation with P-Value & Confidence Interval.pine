@@ -1,0 +1,126 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © balipour
+
+//@version=4
+study("Correlation with P-Value & Confidence Interval [pig]", "BA🐷 CC", false, format.price, 3)
+
+var invisible = color(na)
+bgcolor(#000000c0)
+
+var cPI = 2.0 * asin(1.0) // 3.1415926536 Constant
+
+
+//===== Functions =====//
+cc(x, y, len) => // Correlation Coefficent function
+    lenMinusOne = len - 1
+    meanx = 0.0, meany = 0.0
+    for i=0.0 to lenMinusOne
+        meanx := meanx + nz(x[i])
+        meany := meany + nz(y[i])
+    meanx := meanx / len
+    meany := meany / len
+    sumxy=0.0, sumx=0.0, sumy=0.0
+    for i=0  to lenMinusOne
+        sumxy := sumxy +    (nz(x[i]) - meanx) * (nz(y[i]) - meany)
+        sumx  := sumx  + pow(nz(x[i]) - meanx, 2)
+        sumy  := sumy  + pow(nz(y[i]) - meany, 2)
+    sumxy / sqrt(sumy * sumx)
+
+adj(r, n) => // Unbiased Adjusted R Estimation Approximate Function
+    (1 + (1 - pow(r, 2)) / (2 * n)) * r
+
+Round(src, digits) => // Round Function
+    p = pow(10, digits)
+    round(abs(src) * p) / p * sign(src)
+
+xp(offset) => // Offset 
+    time + round(change(time) * offset)
+
+_label(offset,P, T, s, color_PnL) => // Info Panel
+    label PnL_Label = na
+    label.delete(PnL_Label[1])
+    PnL_Label := label.new(xp(offset), P, text=T, color=color_PnL, textcolor=color.white, style=s, yloc=yloc.price, xloc=xloc.bar_time, size=size.normal)
+
+//===== Inputs =====//
+src    = input(       close,  "========= Source =========", input.source )
+sec1in = input(       "SPX",         "Comparison Security", input.symbol , confirm=true   )
+mode   = input("Adjusted R",       "Correlation Variants ", input.string , options=["R", "Adjusted R"])
+len    = input(          20, "Correlation Lookback Length", input.integer,  minval=2)
+
+//Stats Settings
+sc   = input(true, "Show Confidence Interval for Population", input.bool   )
+csd  = input(1.96,       "Confidence Interval SD Multiplier", input.float  , minval=0.1, step=0.1)  //Default 95% 
+sp   = input(true,                           "Show P-Values", input.bool   )
+cp   = input(0.05,    "P-Value Significant Confidence Level", input.float  , minval=0.0, step=0.01) //Default = 1- 0.05 =  95%
+pan  = input(true,                 " Show Information Panel", input.bool   )
+rlen = input(  50,                      "  R Squared Length", input.integer, minval=2)
+os   = input(  40,                 "  Panel Position Offset", input.integer, minval=0)
+lT   = input(   1,                  "--- Line Thickness ---", input.integer, options=[1,2,3])
+
+sec1 = security(sec1in, timeframe.period, close)
+
+
+//===== Calculations =====//
+R    =  cc(src, sec1, len) // Traditional Pearson
+adjr = adj(  R,       len) // Adjusted R
+
+float r = na
+if(mode == "R")
+    r := R
+if(mode == "Adjusted R")
+    r := adjr
+
+R2    = pow(    cc(src, sec1, rlen)       , 2) // R Squared
+adjR2 = pow(adj(cc(src, sec1, rlen), rlen), 2) // R Sqaured Based on Adjusted R
+
+float r2 = na
+if(mode == "R")
+    r2 := R2
+if(mode == "Adjusted R")
+    r2 := adjR2
+
+// Fisher Transform
+z  = 0.5 * log((r + 1.0) / (1.0 - r)) // Fisher 
+se = 1.0 / sqrt(len - 3)              // Standard Error
+zl = z - csd * se                     // Lower Limit for fisher z
+zu = z + csd * se                     // Upper Limit for fisher z 95% confidence
+
+// Inverse Fisher Transform to Transform Back to r
+rl = (exp(2.0 * zl) - 1.0) / (exp(2.0 * zl) + 1.0)   // Lower limit for r
+ru = (exp(2.0 * zu) - 1.0) / (exp(2.0 * zu) + 1.0)   // Upper limit for r
+
+// P Test
+t      = sqrt((1.0 - pow(r    , 2)) / (len - 2))            // T value based on t distribution degrees of freedom 2 
+Pvalue =  exp(-0.5 * pow(r / t, 2)) / (t * sqrt(2.0 * cPI)) // P Value
+pro    = Pvalue > 1.0 ? 1.0 : Pvalue                        // Limit P value overshoot 1
+
+
+//===== Plotting =====//
+colorCC = (pro < cp and r < 0.0) ? #FF0000ff :
+          (pro < cp and r > 0.0) ? #00FF00ff :
+                                   #FFFFFFff
+colorP  = (pro < cp) ? #FFFF00ff : #C0C0C040
+
+plot(       sp ? pro : na, color=colorP, title="P Value", style=plot.style_columns)
+plotUpper = plot(      rl, color=sc ? color.new(#00C0FFff,100) : invisible, style=plot.style_linebr, title="Confidence Interval Lower" )
+plotLower = plot(      ru, color=sc ? color.new(#00C0FFff,100) : invisible, style=plot.style_linebr, title="Confidence Interval Higher")
+fill(plotUpper, plotLower, color=sc ? color.new(#00C0FFff, 85) : invisible)
+plot(  r,  linewidth=lT  , color=colorCC                                  , style=plot.style_linebr, title="🐷 Correlation")
+
+plot(sp ? cp : na, color=color.new(#C0C0C0ff,30), trackprice=true, show_last=1, title="P value Threshold", style=plot.style_linebr)
+plot(sp ? na :  0, color=color.new(#C0C0C0ff,30), trackprice=true, show_last=1, title="Zero Line")
+hline(        1.0, color=color.new(#00FFFFff,30))
+hline(       -1.0, color=color.new(#FF00FFff,30))
+
+// Information Panel
+sig() =>
+    return = (pro < cp) and r > 0 ? "Significant Positive Correlation" :
+             (pro < cp) and r < 0 ? "Significant Negative Correlation" :
+                                           "Insignificant Correlation"
+
+if(pan)
+    txt =         "R : " + tostring(Round(r  ,3)) +
+     "\n\n R Squared : " + tostring(Round(r2 ,4)) +
+       "\n\n P Value : " + tostring(Round(pro,4)) +
+                  "\n\n" + sig() 
+    _label(os, 0, txt, label.style_label_center, color.new(#000000,45))

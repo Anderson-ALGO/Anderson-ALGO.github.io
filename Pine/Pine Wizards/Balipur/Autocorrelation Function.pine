@@ -1,0 +1,201 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Balipour
+
+//@version=4
+study("AutoCorrelation Function","BA🐷 ACF",precision=3,max_bars_back = 3000)
+ 
+bgcolor(#000000c0)
+ 
+pround(Number, DecimalPlaces) => // Precision Round Function
+    p = pow(10, DecimalPlaces)
+    round(abs(Number) * p) / p * sign(Number)
+ 
+lable(Offset, yLoc, Text, Style, PanelColor) => // Show Panel
+    var label PnL_Label = na
+    PnL_Label := label.new(Offset, yLoc, text=Text, color=PanelColor, textcolor=color.yellow, style=Style, yloc=yloc.price, xloc=xloc.bar_index, size=size.normal)
+    label.delete(PnL_Label[1])
+ 
+lable1(offset,P, T, s, color_PnL) =>
+    label PnL_Label = na
+    PnL_Label := label.new(bar_index[offset], P, text = T, color=color_PnL, textcolor=#FFFFFFff, style = s, yloc=yloc.price, xloc=xloc.bar_index,size=size.normal)
+    label.delete(PnL_Label[1])
+ 
+ 
+autoCorrelation(Series, Lag, Period) => // Autocorrelation Function
+    if barstate.islast
+        mean  = 0.0
+        for i=0 to Period-1
+            mean := mean + Series[i]
+        mean := mean / Period
+        numerator = 0.0
+        for i=0 to Period-Lag-1
+            numerator := numerator + (Series[i] - mean) * (Series[Lag + i] - mean)
+        denominator = 0.0
+        for i=0 to Period-1    
+            denominator := denominator + pow(Series[i] - mean, 2)
+        r = numerator / denominator
+    else
+        na
+ 
+src            =  input(         close,    "========= Source =========", input.source )
+srcType        =  input(  "Log Return", "Alternative Source Selections", input.string , options=["Source","Log Return","Absolute Log Return","Squared Log Return"])
+period         =  input(           365,                      "  Period", input.integer,  minval=51)
+indicatorWidth =  input(             2,               "Indicator Width", input.integer,  minval = 1)
+histogramWidth =  input(             6,           "Histogram Bar Width", input.integer,  options = [4,5,6,7,8])
+showNumbers    =  input(          true,           "Show Numbered Scale", input.bool   )
+showPanel      =  input(          true,                "Show Lag Value", input.bool   )
+lagValue       =  input(             5,          "  Lag Value Position", input.integer, minval=1, maxval=50)
+ib             =  input(          true,     "Invisible Background ⬛", input.bool)
+ 
+float source = na
+priorSrc = nz(src[1], src)
+if (srcType == "Source")
+    source :=         src
+if (srcType == "Log Return")
+    source :=     log(src / priorSrc)
+if (srcType == "Absolute Log Return")
+    source := abs(log(src / priorSrc))
+if (srcType == "Squared Log Return")
+    source := pow(log(src / priorSrc), 2)
+ 
+//From lag 1 to 50
+c1  = autoCorrelation(source,  1, period)
+c2  = autoCorrelation(source,  2, period)
+c3  = autoCorrelation(source,  3, period)
+c4  = autoCorrelation(source,  4, period)
+c5  = autoCorrelation(source,  5, period)
+c6  = autoCorrelation(source,  6, period)
+c7  = autoCorrelation(source,  7, period)
+c8  = autoCorrelation(source,  8, period)
+c9  = autoCorrelation(source,  9, period)
+c10 = autoCorrelation(source, 10, period)
+c11 = autoCorrelation(source, 11, period)
+c12 = autoCorrelation(source, 12, period)
+c13 = autoCorrelation(source, 13, period)
+c14 = autoCorrelation(source, 14, period)
+c15 = autoCorrelation(source, 15, period)
+c16 = autoCorrelation(source, 16, period)
+c17 = autoCorrelation(source, 17, period)
+c18 = autoCorrelation(source, 18, period)
+c19 = autoCorrelation(source, 19, period)
+c20 = autoCorrelation(source, 20, period)
+c21 = autoCorrelation(source, 21, period)
+c22 = autoCorrelation(source, 22, period)
+c23 = autoCorrelation(source, 23, period)
+c24 = autoCorrelation(source, 24, period)
+c25 = autoCorrelation(source, 25, period)
+c26 = autoCorrelation(source, 26, period)
+c27 = autoCorrelation(source, 27, period)
+c28 = autoCorrelation(source, 28, period)
+c29 = autoCorrelation(source, 29, period)
+c30 = autoCorrelation(source, 30, period)
+c31 = autoCorrelation(source, 31, period)
+c32 = autoCorrelation(source, 32, period)
+c33 = autoCorrelation(source, 33, period)
+c34 = autoCorrelation(source, 34, period)
+c35 = autoCorrelation(source, 35, period)
+c36 = autoCorrelation(source, 36, period)
+c37 = autoCorrelation(source, 37, period)
+c38 = autoCorrelation(source, 38, period)
+c39 = autoCorrelation(source, 39, period)
+c40 = autoCorrelation(source, 40, period)
+c41 = autoCorrelation(source, 41, period)
+c42 = autoCorrelation(source, 42, period)
+c43 = autoCorrelation(source, 43, period)
+c44 = autoCorrelation(source, 44, period)
+c45 = autoCorrelation(source, 45, period)
+c46 = autoCorrelation(source, 46, period)
+c47 = autoCorrelation(source, 47, period)
+c48 = autoCorrelation(source, 48, period)
+c49 = autoCorrelation(source, 49, period)
+c50 = autoCorrelation(source, 50, period)
+ 
+//Critical Value
+CV1 = 1.96 / sqrt(period)
+CV2 = -CV1
+ 
+colorColumns = color.new(#00FFFFff,0)
+plot(c1 , style=plot.style_histogram, offset=indicatorWidth*-50, title="lag 1" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c2 , style=plot.style_histogram, offset=indicatorWidth*-49, title="lag 2" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c3 , style=plot.style_histogram, offset=indicatorWidth*-48, title="lag 3" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c4 , style=plot.style_histogram, offset=indicatorWidth*-47, title="lag 4" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c5 , style=plot.style_histogram, offset=indicatorWidth*-46, title="lag 5" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c6 , style=plot.style_histogram, offset=indicatorWidth*-45, title="lag 6" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c7 , style=plot.style_histogram, offset=indicatorWidth*-44, title="lag 7" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c8 , style=plot.style_histogram, offset=indicatorWidth*-43, title="lag 8" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c9 , style=plot.style_histogram, offset=indicatorWidth*-42, title="lag 9" , color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c10, style=plot.style_histogram, offset=indicatorWidth*-41, title="lag 10", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c11, style=plot.style_histogram, offset=indicatorWidth*-40, title="lag 11", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c12, style=plot.style_histogram, offset=indicatorWidth*-39, title="lag 12", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c13, style=plot.style_histogram, offset=indicatorWidth*-38, title="lag 13", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c14, style=plot.style_histogram, offset=indicatorWidth*-37, title="lag 14", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c15, style=plot.style_histogram, offset=indicatorWidth*-36, title="lag 15", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c16, style=plot.style_histogram, offset=indicatorWidth*-35, title="lag 16", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c17, style=plot.style_histogram, offset=indicatorWidth*-34, title="lag 17", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c18, style=plot.style_histogram, offset=indicatorWidth*-33, title="lag 18", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c19, style=plot.style_histogram, offset=indicatorWidth*-32, title="lag 19", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c20, style=plot.style_histogram, offset=indicatorWidth*-31, title="lag 20", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c21, style=plot.style_histogram, offset=indicatorWidth*-30, title="lag 21", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c22, style=plot.style_histogram, offset=indicatorWidth*-29, title="lag 22", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c23, style=plot.style_histogram, offset=indicatorWidth*-28, title="lag 23", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c24, style=plot.style_histogram, offset=indicatorWidth*-27, title="lag 24", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c25, style=plot.style_histogram, offset=indicatorWidth*-26, title="lag 25", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c26, style=plot.style_histogram, offset=indicatorWidth*-25, title="lag 26", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c27, style=plot.style_histogram, offset=indicatorWidth*-24, title="lag 27", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c28, style=plot.style_histogram, offset=indicatorWidth*-23, title="lag 28", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c29, style=plot.style_histogram, offset=indicatorWidth*-22, title="lag 29", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c30, style=plot.style_histogram, offset=indicatorWidth*-21, title="lag 30", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c31, style=plot.style_histogram, offset=indicatorWidth*-20, title="lag 31", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c32, style=plot.style_histogram, offset=indicatorWidth*-19, title="lag 32", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c33, style=plot.style_histogram, offset=indicatorWidth*-18, title="lag 33", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c34, style=plot.style_histogram, offset=indicatorWidth*-17, title="lag 34", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c35, style=plot.style_histogram, offset=indicatorWidth*-16, title="lag 35", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c36, style=plot.style_histogram, offset=indicatorWidth*-15, title="lag 36", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c37, style=plot.style_histogram, offset=indicatorWidth*-14, title="lag 37", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c38, style=plot.style_histogram, offset=indicatorWidth*-13, title="lag 38", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c39, style=plot.style_histogram, offset=indicatorWidth*-12, title="lag 39", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c40, style=plot.style_histogram, offset=indicatorWidth*-11, title="lag 40", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c41, style=plot.style_histogram, offset=indicatorWidth*-10, title="lag 41", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c42, style=plot.style_histogram, offset=indicatorWidth*-9 , title="lag 42", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c43, style=plot.style_histogram, offset=indicatorWidth*-8 , title="lag 43", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c44, style=plot.style_histogram, offset=indicatorWidth*-7 , title="lag 44", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c45, style=plot.style_histogram, offset=indicatorWidth*-6 , title="lag 45", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c46, style=plot.style_histogram, offset=indicatorWidth*-5 , title="lag 46", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c47, style=plot.style_histogram, offset=indicatorWidth*-4 , title="lag 47", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c48, style=plot.style_histogram, offset=indicatorWidth*-3 , title="lag 48", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c49, style=plot.style_histogram, offset=indicatorWidth*-2 , title="lag 49", color=colorColumns, linewidth=histogramWidth, show_last=1)
+plot(c50, style=plot.style_histogram, offset=indicatorWidth*-1 , title="lag 50", color=colorColumns, linewidth=histogramWidth, show_last=1)
+ 
+colorPlotShape = color.new(#FFFFFF,20)
+plotshape(showNumbers ? c5  : na, text="0" , textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-51, show_last=1)
+plotshape(showNumbers ? c5  : na, text="5" , textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-46, show_last=1)
+plotshape(showNumbers ? c10 : na, text="10", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-41, show_last=1)
+plotshape(showNumbers ? c15 : na, text="15", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-36, show_last=1)
+plotshape(showNumbers ? c20 : na, text="20", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-31, show_last=1)
+plotshape(showNumbers ? c25 : na, text="25", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-26, show_last=1)
+plotshape(showNumbers ? c30 : na, text="30", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-21, show_last=1)
+plotshape(showNumbers ? c35 : na, text="35", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-16, show_last=1)
+plotshape(showNumbers ? c40 : na, text="40", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-11, show_last=1)
+plotshape(showNumbers ? c45 : na, text="45", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-6 , show_last=1)
+plotshape(showNumbers ? c45 : na, text="50", textcolor=colorPlotShape, style=shape.arrowdown, color=colorPlotShape, location=location.top, size=size.tiny, offset=indicatorWidth*-1 , show_last=1)
+ 
+
+lbg = ib ?  color.new(#000000,99) :  color.new(#000000,45)
+
+if(showPanel)
+    yLoc = autoCorrelation(source, lagValue, period)
+    Text = "Lag" + tostring(lagValue) + ":\n" + tostring(pround(yLoc, 3))
+    style = autoCorrelation(source, lagValue, period) > 0 ? label.style_label_down : label.style_label_up
+    offset = bar_index - (51 - lagValue) * indicatorWidth
+    lable(offset, yLoc,Text, style, lbg)
+
+ 
+labelc = color.new(#000000, 45)
+lable1(0,CV1, "Positive Critical Value: " + tostring(pround(CV1,3)) , label.style_label_left, labelc)
+lable1(0,CV2, "Negative Critical Value: " + tostring(pround(CV2,3)) , label.style_label_left, labelc)
+ 
+plot( 0.0, color=#FFFFFF80, trackprice=true, show_last=1)
+line1 = line.new( bar_index-1, CV1, bar_index, CV1, extend=extend.left, width=1, color=color.new(#FFFFFF80,50),style = line.style_dashed)
+line2 = line.new( bar_index-1, CV2, bar_index, CV2, extend=extend.left, width=1, color=color.new(#FFFFFF80,50),style = line.style_dashed)
+line.delete(line1[1])
+line.delete(line2[1])

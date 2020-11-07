@@ -1,0 +1,65 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © RicardoSantos
+
+//@version=4
+study(title="test-007-mode")
+
+var label debug = label.new(x=bar_index, y=0.0, text='', style=label.style_label_lower_left)
+f_print(_array, _label)=>
+    int _size = array.size(id=_array) - 1
+    string _t = ''
+    if _size > 0
+        for _i = 0 to _size
+            _t := _t + tostring(_i, '# : ') + tostring(array.get(id=_array, index=_i)) + '\n'
+    label.set_xy(id=_label, x=bar_index, y=0.0)
+    label.set_text(id=_label, text=_t)
+    
+f_push(_id, _value)=>
+    _e = array.pop(id=_id)
+    array.insert(id=_id, index=0, value=_value)
+
+int length = input(10)
+float src = close//bar_index % length
+var float[] prices = array.new_float(size=length, initial_value=close)
+f_push(prices, src)
+
+f_median(_id)=>
+    int _size = array.size(id=_id)
+    int _target = _size / 2//_size % 2 == 0 ? _size / 2 : 1 + _size / 2
+    float[] _sorted = array.copy(id=_id)
+    array.sort(id=_sorted, order=true)
+    //f_print(_sorted, debug)
+    float _return = 0.
+    if _size > 0
+        if _size % 2 == 0
+            _return := array.get(id=_sorted, index=_target)
+        else
+            float[] _center = array.slice(id=_sorted, index_from=_target, index_to=_target + 2)
+            _return := array.sum(id=_center) / 2
+    _return
+
+f_mode(_id, _multiplier)=>
+    int _size = array.size(id=_id)
+    int _max_value = 0
+    int _max_count = 0
+    
+    for _i = 0 to _size-1
+        int _count = 0
+        int _base = round((array.get(id=_id, index=_i) * _multiplier) / _multiplier)
+        for _j = 0 to _size-1
+            int _value = round((array.get(id=_id, index=_j) * _multiplier) / _multiplier)
+            if _value == _base
+                _count := _count + 1
+            if _count > _max_count
+                _max_count := _count
+                _max_value := _base
+    _max_value
+
+plot(src, color=color.gray)
+
+
+float median = f_median(prices)
+plot(median)
+
+int mode = f_mode(prices, 1)
+plot(mode, color=color.orange)

@@ -1,0 +1,31 @@
+// Hector R. Madrid : 30/AUG/2014 13:15 : 2.0 : Donchian Channel Bar
+// This study is based on the Donchain Channel Bar indicator but this adds  security
+// as a parameter. This allows several instances of this indicator to be used
+// in the same page to create a heat map to take look at a glance at several securities.
+//
+study("Madrid Donchian SEC bar", shorttitle="MDonchianSECBar")
+
+len = input(13)
+sec = input("SPY", title="Security")
+
+closeSEC= security(sec, period, close)
+highSEC = security(sec, period, high)
+lowSEC  = security(sec, period, low)
+src = closeSEC
+
+highestBar=highest(highSEC, len)
+lowestBar=lowest(lowSEC, len)
+midBar=(highestBar+lowestBar)/2
+
+// Donchian Indicator
+mdcb = (src-midBar)/(highestBar-lowestBar)
+ceilFloor = mdcb<-0.25 ? -0.5 : mdcb<0 ? -0.25 : mdcb<0.25 ? 0.25 : 0.5
+
+ceilFloorColor = ceilFloor==-0.50 ? red
+               : ceilFloor==-0.25 ? maroon
+               : ceilFloor==0.25  ? green 
+               : ceilFloor==0.50  ? lime
+               : yellow               
+               
+// output
+plot(1, linewidth=3, style=columns, color=ceilFloorColor, transp=30)

@@ -1,0 +1,59 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © balipour
+
+//@version=4
+study("Simple Hurst Exponent [pig]", "BA🐷 HE(S)", false, format.inherit, precision=3, resolution = "")
+
+//Background Color
+bgcolor(#000000c0)
+
+//Functions
+ss(Series, Period) => // Super Smoother Function
+    var PI    = 2.0 * asin(1.0)
+    var SQRT2 = sqrt(2.0)
+    lambda = PI * SQRT2 / Period
+    a1     = exp(-lambda)
+    coeff2 = 2.0 * a1 * cos(lambda)
+    coeff3 = - pow(a1, 2.0)
+    coeff1 = 1.0 - coeff2 - coeff3
+    filt1  = 0.0
+    filt1 := coeff1 * (Series + nz(Series[1])) * 0.5 + coeff2 * nz(filt1[1]) + coeff3 * nz(filt1[2])
+    filt1
+
+//Settings
+y     = input(close,           "===== Source =====", input.source)
+N     = input(   30,                     "Lookback", input.integer, minval = 2, step = 2)
+lower = input(   10,        "Super Smoother Period", input.float,   minval = 2, step = 0.5)
+sh    = input( true,          "Show Hurst Exponent", input.bool)
+sm    = input( true, "Show Smoothed Hurst Exponent", input.bool)
+lT    = input(    2,       "--- Line Thickness ---", input.integer, options=[1,2,3])
+  
+//Hurst Exponent Calculation
+ymin =  lowest(y, N)
+ymax = highest(y, N)
+yscl = ymax - ymin
+
+lngth = 0.0
+if (N < 2 or ymax == ymin)
+    lngth := 1.0
+else
+    lngth := 0.0
+    dx2 = 1.0 / (N * N)
+    for j = 1 to N
+        dy = (nz(y[j]) - nz(y[j - 1])) / yscl
+        lngth := lngth + sqrt(dx2 + (dy * dy))
+
+var LOG2 = log(2.0)
+FDI   = 1.0 + (log(lngth) + LOG2) / log(2.0 * N)
+Hurst = 2.0 - FDI
+filt1 = ss(Hurst, lower)
+
+//Colors
+c  = Hurst > 0.5 ?  color.aqua   : #FF0080ff
+c2 = filt1 > 0.5 ?  color.orange : color.lime
+
+//Plot
+plot(sh ? Hurst : na, "Hurst Exponent", c , transp=0, linewidth=lT)
+plot(sm ? filt1 : na,             "ma", c2, transp=0, linewidth=lT)
+hline(0.5, "threshold", color.white, hline.style_dotted)
+

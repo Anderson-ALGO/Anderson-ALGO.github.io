@@ -1,0 +1,116 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © RicardoSantos
+
+//@version=4
+study(title='Function: Discrete Fourier Transform')
+
+float CLOSE_TO_ZERO_THRESHOLD = 1e-10
+
+//| Based on : https://github.com/trekhleb/javascript-algorithms/blob/master/src/algorithms/math/fourier-transform/discreteFourierTransform.js
+//  Discrete Fourier Transform (DFT): time to frequencies.
+//  * @param {number[]} inputAmplitudes - Input signal amplitudes over time (complex
+//  * numbers with real parts only).
+//  * @param {number} zeroThreshold - Threshold that is used to convert real and imaginary numbers
+//  * to zero in case if they are smaller then this.
+//  *
+//  * @return {ComplexNumber[]} - Array of complex number. Each of the number represents the frequency
+//  * or signal. All signals together will form input signal over discrete time periods. Each signal's
+//  * complex number has radius (amplitude) and phase (angle) in polar form that describes the signal.
+
+f_dft(_inputAmplitudes, _zerothreshold)=>
+    float _threshold = na
+    if na(_zerothreshold)
+        _threshold := _zerothreshold
+    else
+        _threshold := 1e-10
+    
+    float _pi = 3.14159265359
+    int _N = array.size(_inputAmplitudes)
+    float[] _signals_amplitude = array.new_float(0)
+    float[] _signals_phase = array.new_float(0)
+
+    if _N > 0
+        // Go through every discrete frequency.
+        for _frequency = 0 to _N-1
+            // Compound signal at current frequency that will ultimately
+            // take part in forming input amplitudes.
+            float _frequencySignal_a = na
+            float _frequencySignal_p = na
+            // Go through every discrete point in time.
+            for _timer = 0 to _N-1
+                float _currentAmplitude = array.get(id=_inputAmplitudes, index=_timer)
+                
+                // Calculate rotation angle.
+                float _rotationAngle = -1.0 * (2.0 * _pi) * _frequency * (_timer / _N)
+                
+                // Remember that e^ix = cos(x) + i * sin(x);
+                float _dataPointContribution_a = cos(_rotationAngle) * _currentAmplitude
+                float _dataPointContribution_p = sin(_rotationAngle) * _currentAmplitude
+                
+                // Add this data point's contribution.
+                _frequencySignal_a := nz(_frequencySignal_a) + _dataPointContribution_a
+                _frequencySignal_p := nz(_frequencySignal_p) + _dataPointContribution_p
+    
+            // Close to zero? You're zero.
+            if abs(_frequencySignal_a) < _threshold
+                _frequencySignal_a := 0
+            
+            if abs(_frequencySignal_p) < _threshold
+                _frequencySignal_p := 0
+    
+            // Average contribution at this frequency.
+            // The 1/N factor is usually moved to the reverse transform (going from frequencies
+            // back to time). This is allowed, though it would be nice to have 1/N in the forward
+            // transform since it gives the actual sizes for the time spikes.
+            _frequencySignal_a := nz(_frequencySignal_a) / _N
+            _frequencySignal_p := nz(_frequencySignal_p) / _N
+    
+            
+            // Add current frequency signal to the list of compound signals.
+            array.push(id=_signals_amplitude, value=_frequencySignal_a)
+            array.push(id=_signals_phase, value=_frequencySignal_p)
+
+    [_signals_amplitude, _signals_phase]
+
+var float[] i = array.new_float(0)
+if barstate.islast
+    for _i = 0 to 10
+        array.push(id=i, value=close-close[_i])
+        
+[a, b] = f_dft(i, 0.01)//CLOSE_TO_ZERO_THRESHOLD)//float(na))
+
+string tex = ''
+if barstate.islast
+    for _l = 0 to array.size(a)-1
+        tex := tex + tostring(array.get(a, _l)) + ' | ' + tostring(array.get(b, _l)) + '\n'
+var label la = label.new(bar_index, 0.0, '', style=label.style_label_left)
+label.set_xy(id=la, x=bar_index, y=0.0)
+label.set_text(id=la, text=tex)
+
+f_a(_i)=>array.size(a)>0?array.get(id=a, index=_i):na
+f_b(_i)=>array.size(b)>0?array.get(id=b, index=_i):na
+
+color acol = input(#0000ff)
+color bcol = input(#8080a0)
+int aline = 8
+int bline = 3
+plot(series=f_a(0), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-0, show_last=1)
+plot(series=f_b(0), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-0, show_last=1)
+plot(series=f_a(1), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-1, show_last=1)
+plot(series=f_b(1), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-1, show_last=1)
+plot(series=f_a(2), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-2, show_last=1)
+plot(series=f_b(2), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-2, show_last=1)
+plot(series=f_a(3), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-3, show_last=1)
+plot(series=f_b(3), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-3, show_last=1)
+plot(series=f_a(4), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-4, show_last=1)
+plot(series=f_b(4), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-4, show_last=1)
+plot(series=f_a(5), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-5, show_last=1)
+plot(series=f_b(5), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-5, show_last=1)
+plot(series=f_a(6), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-6, show_last=1)
+plot(series=f_b(6), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-6, show_last=1)
+plot(series=f_a(7), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-7, show_last=1)
+plot(series=f_b(7), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-7, show_last=1)
+plot(series=f_a(8), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-8, show_last=1)
+plot(series=f_b(8), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-8, show_last=1)
+plot(series=f_a(9), color=acol, linewidth=aline, style=plot.style_histogram, transp=20, histbase=0, offset=-9, show_last=1)
+plot(series=f_b(9), color=bcol, linewidth=bline, style=plot.style_histogram, transp=20, histbase=0, offset=-9, show_last=1)

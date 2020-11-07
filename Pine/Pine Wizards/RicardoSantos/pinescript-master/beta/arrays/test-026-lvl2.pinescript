@@ -1,0 +1,136 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © RicardoSantos
+
+//@version=4
+study("test-026-lvl2", overlay=true)
+
+//| Line functions:
+f_initline()=>line.new(time, 0., time, 0., xloc.bar_time, width=2)
+f_line_updater(_id, _x1, _y1, _x2, _y2)=>
+    line.set_xy1(id=_id, x=_x1, y=_y1)
+    line.set_xy2(id=_id, x=_x2, y=_y2)
+    line.set_color(id=_id, color=_y1 > _y2 ? color.teal : color.orange)
+
+var line L00 = f_initline(), var line L10 = f_initline(), var line L20 = f_initline(), var line L30 = f_initline(), var line L40 = f_initline()
+var line L01 = f_initline(), var line L11 = f_initline(), var line L21 = f_initline(), var line L31 = f_initline(), var line L41 = f_initline()
+var line L02 = f_initline(), var line L12 = f_initline(), var line L22 = f_initline(), var line L32 = f_initline(), var line L42 = f_initline()
+var line L03 = f_initline(), var line L13 = f_initline(), var line L23 = f_initline(), var line L33 = f_initline(), var line L43 = f_initline()
+var line L04 = f_initline(), var line L14 = f_initline(), var line L24 = f_initline(), var line L34 = f_initline(), var line L44 = f_initline()
+var line L05 = f_initline(), var line L15 = f_initline(), var line L25 = f_initline(), var line L35 = f_initline(), var line L45 = f_initline()
+var line L06 = f_initline(), var line L16 = f_initline(), var line L26 = f_initline(), var line L36 = f_initline(), var line L46 = f_initline()
+var line L07 = f_initline(), var line L17 = f_initline(), var line L27 = f_initline(), var line L37 = f_initline(), var line L47 = f_initline()
+var line L08 = f_initline(), var line L18 = f_initline(), var line L28 = f_initline(), var line L38 = f_initline(), var line L48 = f_initline()
+var line L09 = f_initline(), var line L19 = f_initline(), var line L29 = f_initline(), var line L39 = f_initline(), var line L49 = f_initline()
+f_line_id(_i)=>(_i==00?L00:(_i==01?L01:(_i==02?L02:(_i==03?L03:(_i==04?L04:(_i==05?L05:(_i==06?L06:(_i==07?L07:(_i==08?L08:(_i==09?L09:
+     (_i==10?L10:(_i==11?L11:(_i==12?L12:(_i==13?L13:(_i==14?L14:(_i==15?L15:(_i==16?L16:(_i==17?L17:(_i==18?L18:(_i==19?L19:
+     (_i==20?L20:(_i==21?L21:(_i==22?L22:(_i==23?L23:(_i==24?L24:(_i==25?L25:(_i==26?L26:(_i==27?L27:(_i==28?L28:(_i==29?L29:
+     (_i==30?L30:(_i==31?L31:(_i==32?L32:(_i==33?L33:(_i==34?L34:(_i==35?L35:(_i==36?L36:(_i==37?L37:(_i==38?L38:(_i==39?L39:
+     (_i==40?L40:(_i==41?L41:(_i==42?L42:(_i==43?L43:(_i==44?L44:(_i==45?L45:(_i==46?L46:(_i==47?L47:(_i==48?L48:(_i==49?L49:na
+     )))))))))) )))))))))) )))))))))) )))))))))) ))))))))))
+
+
+
+var bool trend = false
+var bool direction = false
+
+var float elow = low
+var int tlow = time
+var float ehigh = high
+var int thigh = time
+var float zz = open
+var int tz = time
+
+if trend
+    if direction
+        if high > ehigh
+            ehigh := high
+            thigh := time
+        if high < high[1] and (low < low[1] or (close-low < (high-low) * 0.5)) //down or engulfing closing low
+            elow := low
+            tlow := time
+            zz := ehigh
+            tz := thigh
+    else
+        if low < elow
+            elow := low
+            tlow := time
+        if high > high[1] and (low > low[1] or (high-close < (high-low) * 0.5))//up or engulfing closing high
+            ehigh := high
+            thigh := time
+            zz := elow
+            tz := tlow
+else
+    if direction
+        if high > ehigh
+            ehigh := high
+            thigh := time
+        if high < high[1] and (low < low[1] or (close-low < (high-low) * 0.5)) //down or engulfing closing low
+            if low < low[1]
+                elow := low
+                tlow := time
+            else
+                elow := low[1]
+                tlow := time[1]
+            zz := ehigh
+            tz := thigh
+            direction := false
+    else
+        if low < elow
+            elow := low
+            tlow := time
+        if high > high[1] and (low > low[1] or (close-low > (high-low) * 0.5))//up or engulfing closing high
+            if high > high[1]
+                ehigh := high
+                thigh := time
+            else
+                ehigh := high[1]
+                thigh := time[1]
+            zz := elow
+            tz := tlow
+            direction := true
+
+plot(zz!=zz[1]?zz:na, color=direction?color.green:color.maroon, style=plot.style_circles, linewidth=2)
+
+int degree = input(1)
+bool is_new_zig = change(zz) != 0
+
+var int[] X = array.new_int(size=0, initial_value=0)
+var float[] Y = array.new_float(size=0, initial_value=0)
+
+
+f_filter_pass(_X, _Y, _degree, _value)=>
+//| Alters _X, _Y vector arrays to filter out abcd type continuation patterns.
+    if _degree > 0 and array.size(id=_X) > 1 + 2 * _degree
+        for _i = 1 to _degree
+            float _y0 = array.get(id=_Y, index=0)
+            float _y1 = array.get(id=_Y, index=1)
+            float _y2 = array.get(id=_Y, index=2)
+            if (_value > _y0 and _value >= _y1 and _y0 > _y2) or (_value < _y0 and _value <= _y1 and _y0 < _y2)
+                array.shift(id=_X)
+                array.shift(id=_X)
+                array.shift(id=_Y)
+                array.shift(id=_Y)
+
+
+if is_new_zig
+    f_filter_pass(X, Y, degree, zz)
+    // add new vector
+    array.unshift(id=X, value=tz)
+    array.unshift(id=Y, value=zz)
+
+    // resize if too many vectors
+    if array.size(id=X) > 50
+        array.pop(id=X)
+        array.pop(id=Y)
+    
+    //redraw lines
+    if array.size(id=X) > 2
+        for _i = 0 to array.size(id=X) - 2
+            int _x1 = array.get(id=X, index=_i)
+            int _x2 = array.get(id=X, index=_i + 1)
+            float _y1 = array.get(id=Y, index=_i)
+            float _y2 = array.get(id=Y, index=_i + 1)
+            f_line_updater(f_line_id(_i), _x1, _y1, _x2, _y2)
+
+
+

@@ -1,0 +1,110 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © balipour
+
+//@version=4
+study(title="RSI & EMA with Reverse Calculator Panel [pig]", shorttitle="BA🐷 RSI & EMA", overlay=false)
+
+bgcolor(#000000c0)
+
+//Settings
+src    = input(close,                            "===== Source =====", input.source)
+len    = input(14,                                       "RSI Length", input.integer, minval=2)
+lenema = input(12,                                       "EMA Length", input.integer, minval=2)
+ob     = input(70.0,                               "Overbought Input", input.float,minval=0,step=5)
+os     = input(30.0,                                 "Oversold Input", input.float,minval=0,step=5)
+pan    = input(true,                        " Show Information Panel",  input.bool )
+off    = input(35,                          "  Panel Position Offset",  input.integer, minval=0)
+s      = input(true,                   "Show Entered RSI Price Level",  input.bool )
+ersi   = input(40.0,                            "  Entered RSI Input",  input.float)
+s2     = input(false,                "Show RSI Level for Input Price",  input.bool )
+ip     = input(10000,                       "  Entered Price for RSI",  input.float)
+dec    = input(1,                                          "Decimals",  input.integer, minval=0 , maxval = 10)
+bg     = input(false,                           "Invisible Background",  input.bool )
+
+//Reverse RSI Functions
+reverse(Level) =>
+    x1 = (len - 1) * (rma(max(nz(src[1],src) - src, 0), len) * Level / (100 - Level) - rma(max(src - nz(src[1],src), 0), len))
+    iff(x1 >= 0, src + x1, src + x1 * (100 - Level) / Level)
+
+//RSI
+rsi = rsi(src,len)
+
+//RSIEMA
+ma = ema(rsi, lenema)
+
+//Reverse RSI Price Level Calculations
+revma = reverse(ma)
+revob = reverse(ob)
+revos = reverse(os)
+reversi = reverse(ersi)
+
+//Reverse Reverse RSI
+rr(input)=>
+    alpha = 1 / len
+    up1 = rma(max(change(src),0),len) 
+    down1 = rma(-min(change(src), 0), len)
+    up = alpha * max(input - src[1], 0) + (1 - alpha)*nz(up1[1])
+    down = alpha * -min(input - src[1], 0) + (1 - alpha)*nz(down1[1])
+    rsi = down == 0 ? 100 : up == 0 ? 0 : 100 - (100 / (1 + up / down))
+
+
+rrrsi = rr(ip)
+
+
+//Plots
+
+plot(rsi, color=#40E0D0, linewidth=2, transp=0)
+plot(ma, "EMA", color=color.white, style=plot.style_line, transp=0, linewidth=1)
+
+
+bullzoneband = hline(65, "Bull Lower Zone", color=#40E0D0, linewidth=2, linestyle=hline.style_dotted)
+upband = hline(80, "Bull Uppe Zoner", color=#40E0D0, linewidth=2)
+fill(upband, bullzoneband, color=#40E0D0, transp=90)
+
+bearzoneband = hline(45, "Bear Upper Zone", color=#9400D3, linewidth=2, linestyle=hline.style_dotted)
+downband = hline(30, "Bear Lower Zone", color=#9400D3, linewidth=2)
+fill(bearzoneband, downband, color=#9400D3, transp=90)
+
+hline(50)
+plot(s ? ersi : na, "Entered RSI Value", color = color.lime, trackprice = true ,show_last = 1)
+plot(s2 ? rrrsi : na, "RSI Value for Entered Price", color = color.red, trackprice = true ,show_last = 1)
+//Information Panel
+labelstyle = label.style_label_center
+labelstyle2 = label.style_label_down
+
+labelc = bg ? color.new(#000000, 100) : color.new(#000000, 45)
+
+
+
+//Round Function
+Round(src, digits) => 
+    p = pow(10,digits)
+    round(abs(src)*p)/p*sign(src)
+
+//Offset 
+xp(offset) => 
+    time + round(change(time) * offset)
+
+lable1(offset,P, T, s, color_PnL) =>
+    label PnL_Label = na
+    PnL_Label := label.new(xp(offset), P, text = T, color=color_PnL, textcolor=color.white, style = s, yloc=yloc.price, xloc=xloc.bar_time,size=size.normal)
+    label.delete(PnL_Label[1])
+
+
+ud()=>
+    if rsi < ma
+        "UP EMA"
+    else
+        "DOWN EMA"
+
+//Panel Plot
+if (pan)        
+    lable1(off,50, "RSI Cross " + ud() +  " Price : " + tostring(Round(revma,dec))  + "\n\n" + tostring(Round(ob,dec)) + " Overbought Level Price : " + tostring(Round(revob,dec)) +  "\n\n" + tostring(Round(os,dec)) + " Oversold Level Price : " + tostring(Round(revos,dec)),labelstyle,labelc)
+
+
+if(s)
+    lable1(1,ersi, tostring(Round(ersi,dec)) + " RSI Price : " + tostring(Round(reversi,dec))  ,labelstyle2,labelc)
+
+
+if(s2)
+    lable1(1,rrrsi,  "RSI " + tostring(Round(rrrsi,dec)) +  " For Input Price " + tostring(Round(ip,dec)) ,labelstyle2, labelc)
