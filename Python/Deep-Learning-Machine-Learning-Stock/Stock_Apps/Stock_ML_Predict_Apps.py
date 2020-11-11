@@ -141,7 +141,7 @@ def main():
         choice = int(input())
         
         if choice == 1:
-        print("____________Linear Regression_____________")    
+        print("____________Linear Regression_____________")
              stock_linear_regression()
         elif choice == 2:
         print("____________Logistic Regression_____________")
