@@ -20,7 +20,7 @@
 
 ### Bloomberg Live TV
 
-[Here !](http://Anderson-ALGO.github.io/bloomberg.html) U will find Bloomber TV in real time. Useful dor news and real-time repaorts.
+[Here !](http://Anderson-ALGO.github.io/bloomberg.html) U will find Bloomberg TV in real time. Useful for news and real-time reports.
 
 
 > **Reusing this information**: You are welcome to reuse any of the data. Or idea presented here. Most of the tools are from third-party sources. "The Propose of this dashboard is to keep all essential information in one place"
