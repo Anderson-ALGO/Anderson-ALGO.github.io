@@ -26,7 +26,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/Python/Stock_Analysis_For_Quant" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1k4DKSKdiWTHOMQbgfYS38fOLmY" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -39,7 +39,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.mobile_app">
+  <component name="RunManager" selected="Python.googlesheets">
     <configuration name="bar" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Anderson-ALGO.github.io" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -82,7 +82,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="input_non_text" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="googlesheets" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Anderson-ALGO.github.io" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -90,11 +90,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Python/Dash-by-Plotly-master/Dash Components/Input_element" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Python/Dash-by-Plotly-master/Dash Components/Input_element/input_non_text.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/googlesheets.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -147,11 +147,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.googlesheets" />
         <item itemvalue="Python.mobile_app" />
         <item itemvalue="Python.challenge_solution (1)" />
         <item itemvalue="Python.bar" />
         <item itemvalue="Python.input_text" />
-        <item itemvalue="Python.input_non_text" />
       </list>
     </recent_temporary>
   </component>
@@ -179,25 +179,25 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1836" height="288" key="GridCell.Tab.0.bottom" timestamp="1604977630264">
-      <screen x="63" y="0" width="1857" height="1080" />
+    <state width="874" height="290" key="GridCell.Tab.0.bottom" timestamp="1605205760652">
+      <screen x="124" y="0" width="1796" height="1080" />
     </state>
-    <state width="1775" height="251" key="GridCell.Tab.0.bottom/124.0.1796.1080@124.0.1796.1080" timestamp="1604951375733" />
+    <state width="874" height="290" key="GridCell.Tab.0.bottom/124.0.1796.1080@124.0.1796.1080" timestamp="1605205760652" />
     <state width="1836" height="288" key="GridCell.Tab.0.bottom/63.0.1857.1080@63.0.1857.1080" timestamp="1604977630264" />
-    <state width="1836" height="288" key="GridCell.Tab.0.center" timestamp="1604977630264">
-      <screen x="63" y="0" width="1857" height="1080" />
+    <state width="874" height="290" key="GridCell.Tab.0.center" timestamp="1605205760652">
+      <screen x="124" y="0" width="1796" height="1080" />
     </state>
-    <state width="1775" height="251" key="GridCell.Tab.0.center/124.0.1796.1080@124.0.1796.1080" timestamp="1604951375733" />
+    <state width="874" height="290" key="GridCell.Tab.0.center/124.0.1796.1080@124.0.1796.1080" timestamp="1605205760652" />
     <state width="1836" height="288" key="GridCell.Tab.0.center/63.0.1857.1080@63.0.1857.1080" timestamp="1604977630264" />
-    <state width="1836" height="288" key="GridCell.Tab.0.left" timestamp="1604977630263">
-      <screen x="63" y="0" width="1857" height="1080" />
+    <state width="874" height="290" key="GridCell.Tab.0.left" timestamp="1605205760652">
+      <screen x="124" y="0" width="1796" height="1080" />
     </state>
-    <state width="1775" height="251" key="GridCell.Tab.0.left/124.0.1796.1080@124.0.1796.1080" timestamp="1604951375733" />
+    <state width="874" height="290" key="GridCell.Tab.0.left/124.0.1796.1080@124.0.1796.1080" timestamp="1605205760652" />
     <state width="1836" height="288" key="GridCell.Tab.0.left/63.0.1857.1080@63.0.1857.1080" timestamp="1604977630263" />
-    <state width="1836" height="288" key="GridCell.Tab.0.right" timestamp="1604977630264">
-      <screen x="63" y="0" width="1857" height="1080" />
+    <state width="874" height="290" key="GridCell.Tab.0.right" timestamp="1605205760652">
+      <screen x="124" y="0" width="1796" height="1080" />
     </state>
-    <state width="1775" height="251" key="GridCell.Tab.0.right/124.0.1796.1080@124.0.1796.1080" timestamp="1604951375733" />
+    <state width="874" height="290" key="GridCell.Tab.0.right/124.0.1796.1080@124.0.1796.1080" timestamp="1605205760652" />
     <state width="1836" height="288" key="GridCell.Tab.0.right/63.0.1857.1080@63.0.1857.1080" timestamp="1604977630264" />
     <state x="448" y="192" key="SettingsEditor" timestamp="1604977331590">
       <screen x="63" y="0" width="1857" height="1080" />
