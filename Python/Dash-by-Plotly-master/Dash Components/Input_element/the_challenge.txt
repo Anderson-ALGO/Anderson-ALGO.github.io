@@ -1,3 +1,0 @@
-Add code to the callback function, so if Enter is 
-clicked by user 3 times,  the text below the input 
-would return "Game Over"  
