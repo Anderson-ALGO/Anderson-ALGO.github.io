@@ -26,20 +26,158 @@
 </html>
 
 <body style="background-color: black">
-  <!-- TradingView Widget BEGIN -->
   <div class="tradingview-widget-container" style="width: 100%; height: 104px">
-    <iframe
-      id="Home"
-      scrolling="no"
-      allowtransparency="true"
-      frameborder="0"
-      src="https://s.tradingview.com/embed-widget/ticker-tape/?locale=en#%7B%22symbols%22%3A%5B%7B%22proName%22%3A%22FOREXCOM%3ASPXUSD%22%2C%22title%22%3A%22S%26P%20500%22%7D%2C%7B%22proName%22%3A%22FOREXCOM%3ANSXUSD%22%2C%22title%22%3A%22Nasdaq%20100%22%7D%2C%7B%22proName%22%3A%22FX_IDC%3AEURUSD%22%2C%22title%22%3A%22EUR%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3ABTCUSD%22%2C%22title%22%3A%22BTC%2FUSD%22%7D%2C%7B%22proName%22%3A%22BITSTAMP%3AETHUSD%22%2C%22title%22%3A%22ETH%2FUSD%22%7D%2C%7B%22description%22%3A%22XAU%2FUSD%22%2C%22proName%22%3A%22OANDA%3AXAUUSD%22%7D%2C%7B%22description%22%3A%22EUR%2FUSD%22%2C%22proName%22%3A%22FX%3AEURUSD%22%7D%2C%7B%22description%22%3A%22GBP%2FUSD%22%2C%22proName%22%3A%22FX%3AGBPUSD%22%7D%2C%7B%22description%22%3A%22AUD%2FUSD%22%2C%22proName%22%3A%22FX%3AAUDUSD%22%7D%2C%7B%22description%22%3A%22NZD%2FUSD%22%2C%22proName%22%3A%22FX%3ANZDUSD%22%7D%2C%7B%22description%22%3A%22USD%2FCAD%22%2C%22proName%22%3A%22FX%3AUSDCAD%22%7D%2C%7B%22description%22%3A%22USD%2FCHF%22%2C%22proName%22%3A%22FX%3AUSDCHF%22%7D%5D%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22displayMode%22%3A%22compact%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A104%2C%22utm_source%22%3A%22liveweave.com%22%2C%22utm_medium%22%3A%22widget_new%22%2C%22utm_campaign%22%3A%22ticker-tape%22%7D"
-      style="box-sizing: border-box; height: 72px; width: 100%"
-    ></iframe>
-    <div class="tradingview-widget-copyright">
-      <a href="https://www.tradingview.com" rel="noopener" target="_blank"
-        ><span class="blue-text"></span
-      ></a>
+    <!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+    {
+    "symbols": [
+      {
+        "description": "US30",
+        "proName": "OANDA:US30USD"
+      },
+      {
+        "description": "SPX500",
+        "proName": "OANDA:SPX500USD"
+      },
+      {
+        "description": "NQ1!",
+        "proName": "CME_MINI:NQ1!"
+      },
+      {
+        "description": "AU200",
+        "proName": "OANDA:AU200AUD"
+      },
+      {
+        "description": "DE30EUR",
+        "proName": "OANDA:DE30EUR"
+      },
+      {
+        "description": "JP225",
+        "proName": "OANDA:JP225USD"
+      },
+      {
+        "description": "UK100",
+        "proName": "OANDA:UK100GBP"
+      },
+      {
+        "description": "USOIL",
+        "proName": "TVC:USOIL"
+      },
+      {
+        "description": "XAUUSD",
+        "proName": "OANDA:XAUUSD"
+      },
+      {
+        "description": "SILVER",
+        "proName": "OANDA:XAGUSD"
+      },
+      {
+        "description": "BTCUSDT",
+        "proName": "BINANCE:BTCUSDT"
+      },
+      {
+        "description": "ETHUSDT",
+        "proName": "BINANCE:ETHUSDT"
+      },
+      {
+        "description": "AUDUSD",
+        "proName": "FX:AUDUSD"
+      },
+      {
+        "description": "EURUSD",
+        "proName": "FX:EURUSD"
+      },
+      {
+        "description": "USDJPY",
+        "proName": "FX:USDJPY"
+      },
+      {
+        "description": "GBPUSD",
+        "proName": "FX:GBPUSD"
+      },
+      {
+        "description": "USDCAD",
+        "proName": "FX:USDCAD"
+      },
+      {
+        "description": "USDCHF",
+        "proName": "FX:USDCHF"
+      },
+      {
+        "description": "NZDUSD",
+        "proName": "FX:NZDUSD"
+      },
+      {
+        "description": "EURJPY",
+        "proName": "FX:EURJPY"
+      },
+      {
+        "description": "GBPJPY",
+        "proName": "FX:GBPJPY"
+      },
+      {
+        "description": "EURGBP",
+        "proName": "FX:EURGBP"
+      },
+      {
+        "description": "EURAUD",
+        "proName": "FX:EURAUD"
+      },
+      {
+        "description": "EURAUD",
+        "proName": "FX:GBPAUD"
+      },
+      {
+        "description": "EURCAD",
+        "proName": "FX:EURCAD"
+      },
+      {
+        "description": "APPLE",
+        "proName": "NASDAQ:AAPL"
+      },
+      {
+        "description": "AMAZON",
+        "proName": "NASDAQ:AMZN"
+      },
+      {
+        "description": "TESLA",
+        "proName": "NASDAQ:TSLA"
+      },
+      {
+        "description": "MICROSOFT",
+        "proName": "NASDAQ:MSFT"
+      },
+      {
+        "description": "P&G",
+        "proName": "NYSE:PG"
+      },
+      {
+        "description": "FACEBOOK",
+        "proName": "NASDAQ:FB"
+      },
+      {
+        "description": "NVDA",
+        "proName": "NASDAQ:NVDA"
+      },
+      {
+        "description": "NFLX",
+        "proName": "NASDAQ:NFLX"
+      },
+      {
+        "description": "DISNEY",
+        "proName": "NYSE:DIS"
+      }
+    ],
+    "showSymbolLogo": true,
+    "colorTheme": "dark",
+    "isTransparent": true,
+    "displayMode": "compact",
+    "locale": "en"
+    }
+    </script>
+</div>
+<!-- TradingView Widget END -->
     </div>
 
     <style>
