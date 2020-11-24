@@ -1,3 +1,18 @@
+tim1            =    iff(time_      =="D"               , " ║ DAILY", 
+                     iff(time_      =="W"               , " ║ WEEKLY", 
+                     iff(time_      =="M"               , " ║ MONTHLY", 
+                     iff(time_      =="3M"              , " ║ QUATERLY", 
+                     iff(time_      =="12M"             , " ║ YEARLY", 
+                     iff(time_      =="6M"              , " ║ HALF-YEAR", na))))))
+
+calculation     =    iff(type_sw    =="Fibonacci"       , " ║ Fibonacci", 
+                     iff(type_sw    =="Camarilla"       , " ║ Camarilla", 
+                     iff(type_sw    =="Traditional"     , " ║ Traditional", 
+                     iff(type_sw    =="Standard D."     , " ║ Standard D.", na))))
+
+chper = time - time[1]
+chper := change(chper) > 0 ? chper[1] : chper
+
 label_funct( _x_r1, _x_s1, _x_r2, _x_s2, _x_r3, _x_s3, _x_r4, _x_s4, _x_r5, _x_s5, _x_r6, _x_s6)=>
     if showlabels
 
