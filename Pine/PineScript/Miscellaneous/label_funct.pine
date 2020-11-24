@@ -1,0 +1,118 @@
+label_funct( _x_r1, _x_s1, _x_r2, _x_s2, _x_r3, _x_s3, _x_r4, _x_s4, _x_r5, _x_s5, _x_r6, _x_s6)=>
+    if showlabels
+
+        var label s3label = na, var label s4label = na, var label s5label = na, var label s1label = na, var label s2label = na, var label s6label = na
+        var label r3label = na, var label r4label = na, var label r5label = na, var label r1label = na, var label r2label = na, var label r6label = na
+        
+        label.delete(s3label), label.delete(s4label), label.delete(s5label), label.delete(s1label), label.delete(s2label), label.delete(s6label)
+        label.delete(r3label), label.delete(r4label), label.delete(r5label), label.delete(r1label), label.delete(r2label), label.delete(r6label)
+        
+        r1label := label.new(x = time + chper * 20, 
+                     y          =   _x_r1, 
+                     text       =   "R1 : " + tostring(_x_r1, "#.####")  + tim1  + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s1label := label.new(x = time + chper * 20, 
+                     y          =   _x_s1, 
+                     text       =   "S1 : " + tostring(_x_s1, "#.####")  + tim1  + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        r2label := label.new(x = time + chper * 20, 
+                     y          =   _x_r2, 
+                     text       =   "R2 : " + tostring(_x_r2, "#.####")  + tim1  + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left,
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s2label := label.new(x = time + chper * 20, 
+                     y          =   _x_s2, 
+                     text       =   "S2 : " + tostring(_x_s2, "#.####")  +tim1  + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        r3label := label.new(x = time + chper * 20, 
+                     y          =   _x_r3, 
+                     text       =   "R3 : " + tostring(_x_r3, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s3label := label.new(x = time + chper * 20, 
+                     y          =   _x_s3, 
+                     text       =   "S3 : " + tostring(_x_s3, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        r4label := label.new(x = time + chper * 20, 
+                     y          =   _x_r4, 
+                     text       =   "R4 : " + tostring(_x_r4, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s4label := label.new(x = time + chper * 20, 
+                     y          =   _x_s4, 
+                     text       =   "S4 : " + tostring(_x_s4, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        r5label := label.new(x = time + chper * 20, 
+                     y          =   _x_r5, 
+                     text       =   "R5 : " + tostring(_x_r5, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s5label := label.new(x = time + chper * 20, 
+                     y          =   _x_s5, 
+                     text       =   "S5 : " + tostring(_x_s5, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        r6label := label.new(x = time + chper * 20, 
+                     y          =   _x_r6, 
+                     text       =   "R6 : " + tostring(_x_r6, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+    
+        s6label := label.new(x = time + chper * 20, 
+                     y          =   _x_s6, 
+                     text       =   "S6 : " + tostring(_x_s6, "#.####")  + tim1 + calculation, 
+                     color      =   _color, 
+                     textcolor  =   _color_txt, 
+                     style      =   label.style_label_left, 
+                     xloc       =   xloc.bar_time, 
+                     yloc       =   yloc.price)
+        
+        [r1label, r2label, r3label, r4label, r5label, r6label, s1label, s2label, s3label, s4label, s5label, s6label]
